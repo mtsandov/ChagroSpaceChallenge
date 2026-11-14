@@ -1,0 +1,26 @@
+[
+  {
+    "id": "daule",
+    "name": "Cuenca Baja del Guayas – Daule",
+    "short_name": "Daule",
+    "center": [
+      -1.865,
+      -79.985
+    ],
+    "zoom": 13,
+    "sustainable_quota_ha": 600,
+    "description": "Zona arrocera y cañera del bajo Guayas, con esteros comunitarios aguas abajo."
+  },
+  {
+    "id": "santa-elena",
+    "name": "Canal Trasvase – Santa Elena",
+    "short_name": "Santa Elena",
+    "center": [
+      -2.235,
+      -80.585
+    ],
+    "zoom": 13,
+    "sustainable_quota_ha": 430,
+    "description": "Área semiárida abastecida por el trasvase Chongón–Sube y Baja."
+  }
+]

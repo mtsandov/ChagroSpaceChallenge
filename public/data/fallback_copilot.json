@@ -1,0 +1,14 @@
+{
+  "_note": "Respuestas pre-escritas para los chips rápidos cuando Gemini no responde (seguro offline para la demo). Las llaves coinciden con los ids de src/lib/copilot/chips.ts.",
+  "community": {
+    "transparency_report": "**Reporte de transparencia hídrica — {{basin}}**\n\n• Lluvia NASA POWER últimos 15 días: **{{rain15}} mm** (estación seca confirmada).\n• Área con agua superficial detectada por SAR: **{{irrigated_ha}} ha**, un **{{quota_pct}}% sobre la cuota sostenible**.\n• Parcelas con exceso de agua: {{excessive_list}}.\n• Estero comunitario más bajo: **{{lowest_station}} ({{lowest_level}}%)**.\n\nComo no ha llovido, el agua que detecta el radar en esas parcelas viene del riego (canales o bombeo), no de la lluvia. Recomendamos llevar este reporte a la Junta de Agua para revisar los turnos de riego.",
+    "estero_dropping": "Con **{{rain15}} mm de lluvia** en las últimas dos semanas, el estero no está recibiendo agua de lluvia. Al mismo tiempo, el radar SAR de la NASA detecta **{{irrigated_ha}} ha cubiertas de agua** en fincas comerciales aguas arriba.\n\nLa caída del estero ({{lowest_level}}%) coincide con ese riego intensivo: el agua se está desviando antes de llegar a la comunidad. El dato satelital sirve como evidencia objetiva para pedir un reparto más equitativo.",
+    "basin_summary": "**{{basin}}** está en plena época seca. ET₀ promedio: **{{et0_avg}} mm/día**. Hay {{n_excessive}} parcela(s) con exceso de agua superficial y {{n_deficit}} con déficit hídrico. Las estaciones comunitarias muestran tendencia a la baja."
+  },
+  "farmer": {
+    "pump_schedule": "**Horario de bombeo sugerido — {{parcel}}**\n\n• Necesidad de riego: **{{gross_mm}} mm** ({{volume_m3}} m³) para los últimos {{days}} días.\n• Tiempo de riego: **{{time_h}} h**.\n• Riega de madrugada (04:00–08:00): la evaporación es menor y la tarifa eléctrica suele ser más barata.\n• El pronóstico a 72 h no trae lluvia, así que conviene repartir el riego en 2–3 turnos.",
+    "savings_25": "Si reduces el riego un **25%** en **{{parcel}}**:\n\n• Ahorro de agua: **{{saved_m3}} m³**.\n• Ahorro de energía: **{{saved_kwh}} kWh**.\n• Esa reducción es **riego deficitario controlado**: aplícala en la etapa menos sensible del cultivo, no en floración ni en llenado de grano.",
+    "parcel_status": "El radar SAR muestra **{{irrigated_pct}}%** de la parcela con agua superficial y una humedad de suelo de **{{soil_moisture}} m³/m³**. Si ese valor está por encima de la capacidad de campo, puedes saltarte el próximo turno de riego sin afectar al cultivo."
+  },
+  "generic": "Por ahora no me puedo conectar con el modelo de IA. Puedo darte la información del mapa: selecciona una parcela o estación y usa los botones rápidos."
+}

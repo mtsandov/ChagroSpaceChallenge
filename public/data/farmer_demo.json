@@ -1,0 +1,48 @@
+[
+  {
+    "id": "demo-parcel-rice",
+    "name": "Lote Arroz 1",
+    "basin_id": "daule",
+    "crop_id": "rice",
+    "planting_date": "2026-09-20",
+    "soil_type_id": "clay",
+    "area_ha": 12.5,
+    "center": [
+      -1.873,
+      -80.006
+    ],
+    "irrigation": {
+      "type": "flood",
+      "mode": "per_area",
+      "efficiency": 60,
+      "system_flow_m3h": 180,
+      "pump_kw": 22,
+      "pump_head_m": 8,
+      "percolation_mm_day": 3
+    }
+  },
+  {
+    "id": "demo-parcel-banana",
+    "name": "Lote Banano Goteo",
+    "basin_id": "daule",
+    "crop_id": "banana",
+    "planting_date": "2026-03-01",
+    "soil_type_id": "loam",
+    "area_ha": 4.2,
+    "center": [
+      -1.879,
+      -79.972
+    ],
+    "irrigation": {
+      "type": "drip",
+      "mode": "per_plant",
+      "efficiency": 90,
+      "num_plants": 7400,
+      "canopy_radius_m": 1.2,
+      "flow_rate_lph": 4,
+      "emitters": 2,
+      "pump_kw": 7.5,
+      "pump_head_m": 25
+    }
+  }
+]

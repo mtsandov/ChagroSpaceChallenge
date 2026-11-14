@@ -1,0 +1,819 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "HACIENDA_NORTE_01",
+        "name": "Hacienda Norte 01",
+        "basin_id": "daule",
+        "zone_type": "commercial_farm",
+        "crop": "Arroz",
+        "area_hectares": 533.8,
+        "irrigated_area_pct": 70.2,
+        "irrigated_area_ha": 374.9,
+        "baseline_water_pct": 2.6,
+        "sar_backscatter_db": -19.4,
+        "sar_delta_db": -6.1,
+        "soil_moisture_m3m3": 0.47,
+        "ndvi": 0.76,
+        "status": "excessive",
+        "status_label": "Exceso de agua superficial detectado",
+        "observation_date": "2026-11-10",
+        "baseline_date": "2026-08-15",
+        "sensor": "NISAR GCOV (simulado)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -79.982037,
+              -1.848
+            ],
+            [
+              -79.983941,
+              -1.841687
+            ],
+            [
+              -79.990451,
+              -1.837
+            ],
+            [
+              -79.999064,
+              -1.838173
+            ],
+            [
+              -80.005735,
+              -1.841872
+            ],
+            [
+              -80.008193,
+              -1.848
+            ],
+            [
+              -80.006864,
+              -1.854772
+            ],
+            [
+              -79.999251,
+              -1.85828
+            ],
+            [
+              -79.990457,
+              -1.858985
+            ],
+            [
+              -79.984459,
+              -1.854017
+            ],
+            [
+              -79.982037,
+              -1.848
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "HACIENDA_NORTE_02",
+        "name": "Hacienda Norte 02",
+        "basin_id": "daule",
+        "zone_type": "commercial_farm",
+        "crop": "Caña de azúcar",
+        "area_hectares": 388.9,
+        "irrigated_area_pct": 70.1,
+        "irrigated_area_ha": 272.7,
+        "baseline_water_pct": 5.4,
+        "sar_backscatter_db": -19.3,
+        "sar_delta_db": -5.9,
+        "soil_moisture_m3m3": 0.49,
+        "ndvi": 0.75,
+        "status": "excessive",
+        "status_label": "Exceso de agua superficial detectado",
+        "observation_date": "2026-11-10",
+        "baseline_date": "2026-08-15",
+        "sensor": "NISAR GCOV (simulado)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -79.955955,
+              -1.852
+            ],
+            [
+              -79.959022,
+              -1.847108
+            ],
+            [
+              -79.964186,
+              -1.843197
+            ],
+            [
+              -79.971675,
+              -1.843517
+            ],
+            [
+              -79.977022,
+              -1.847084
+            ],
+            [
+              -79.979856,
+              -1.852
+            ],
+            [
+              -79.978337,
+              -1.857633
+            ],
+            [
+              -79.971815,
+              -1.860807
+            ],
+            [
+              -79.964347,
+              -1.860433
+            ],
+            [
+              -79.957933,
+              -1.857485
+            ],
+            [
+              -79.955955,
+              -1.852
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "AGRO_EL_ROSARIO",
+        "name": "Agrícola El Rosario",
+        "basin_id": "daule",
+        "zone_type": "commercial_farm",
+        "crop": "Arroz",
+        "area_hectares": 272.5,
+        "irrigated_area_pct": 45,
+        "irrigated_area_ha": 122.6,
+        "baseline_water_pct": 6.8,
+        "sar_backscatter_db": -11.1,
+        "sar_delta_db": -2.6,
+        "soil_moisture_m3m3": 0.33,
+        "ndvi": 0.74,
+        "status": "normal",
+        "status_label": "Riego dentro de lo esperado",
+        "observation_date": "2026-11-10",
+        "baseline_date": "2026-08-15",
+        "sensor": "NISAR GCOV (simulado)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -79.996724,
+              -1.873
+            ],
+            [
+              -79.99714,
+              -1.86785
+            ],
+            [
+              -80.002921,
+              -1.865419
+            ],
+            [
+              -80.008816,
+              -1.866066
+            ],
+            [
+              -80.014084,
+              -1.868302
+            ],
+            [
+              -80.01509,
+              -1.873
+            ],
+            [
+              -80.013472,
+              -1.877343
+            ],
+            [
+              -80.009269,
+              -1.881049
+            ],
+            [
+              -80.003188,
+              -1.879922
+            ],
+            [
+              -79.99802,
+              -1.877638
+            ],
+            [
+              -79.996724,
+              -1.873
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "FINCA_SAN_JOSE",
+        "name": "Finca San José",
+        "basin_id": "daule",
+        "zone_type": "smallholder",
+        "crop": "Banano",
+        "area_hectares": 70.8,
+        "irrigated_area_pct": 45.1,
+        "irrigated_area_ha": 31.9,
+        "baseline_water_pct": 2.1,
+        "sar_backscatter_db": -12.9,
+        "sar_delta_db": -2,
+        "soil_moisture_m3m3": 0.29,
+        "ndvi": 0.79,
+        "status": "normal",
+        "status_label": "Riego dentro de lo esperado",
+        "observation_date": "2026-11-10",
+        "baseline_date": "2026-08-15",
+        "sensor": "NISAR GCOV (simulado)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -79.966761,
+              -1.879
+            ],
+            [
+              -79.967763,
+              -1.876537
+            ],
+            [
+              -79.970411,
+              -1.875087
+            ],
+            [
+              -79.973393,
+              -1.875569
+            ],
+            [
+              -79.975953,
+              -1.876702
+            ],
+            [
+              -79.9768,
+              -1.879
+            ],
+            [
+              -79.976144,
+              -1.881409
+            ],
+            [
+              -79.973472,
+              -1.882625
+            ],
+            [
+              -79.97046,
+              -1.882791
+            ],
+            [
+              -79.968107,
+              -1.881263
+            ],
+            [
+              -79.966761,
+              -1.879
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "FINCA_LAS_PALMAS",
+        "name": "Finca Las Palmas",
+        "basin_id": "daule",
+        "zone_type": "smallholder",
+        "crop": "Cacao",
+        "area_hectares": 57.5,
+        "irrigated_area_pct": 8.3,
+        "irrigated_area_ha": 4.8,
+        "baseline_water_pct": 4.1,
+        "sar_backscatter_db": -7.7,
+        "sar_delta_db": -0.5,
+        "soil_moisture_m3m3": 0.13,
+        "ndvi": 0.32,
+        "status": "deficit",
+        "status_label": "Déficit hídrico / suelo seco",
+        "observation_date": "2026-11-10",
+        "baseline_date": "2026-08-15",
+        "sensor": "NISAR GCOV (simulado)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -79.985712,
+              -1.884
+            ],
+            [
+              -79.986042,
+              -1.881763
+            ],
+            [
+              -79.988674,
+              -1.880826
+            ],
+            [
+              -79.991508,
+              -1.88039
+            ],
+            [
+              -79.993933,
+              -1.881778
+            ],
+            [
+              -79.994139,
+              -1.884
+            ],
+            [
+              -79.993601,
+              -1.886035
+            ],
+            [
+              -79.991435,
+              -1.887436
+            ],
+            [
+              -79.988648,
+              -1.887236
+            ],
+            [
+              -79.986426,
+              -1.88602
+            ],
+            [
+              -79.985712,
+              -1.884
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "COMUNA_LA_VICTORIA",
+        "name": "Comuna La Victoria",
+        "basin_id": "daule",
+        "zone_type": "community",
+        "crop": "Maíz",
+        "area_hectares": 115.6,
+        "irrigated_area_pct": 6,
+        "irrigated_area_ha": 6.9,
+        "baseline_water_pct": 5.2,
+        "sar_backscatter_db": -8.3,
+        "sar_delta_db": -0.8,
+        "soil_moisture_m3m3": 0.19,
+        "ndvi": 0.34,
+        "status": "deficit",
+        "status_label": "Déficit hídrico / suelo seco",
+        "observation_date": "2026-11-10",
+        "baseline_date": "2026-08-15",
+        "sensor": "NISAR GCOV (simulado)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -79.972826,
+              -1.862
+            ],
+            [
+              -79.974049,
+              -1.859003
+            ],
+            [
+              -79.977255,
+              -1.857524
+            ],
+            [
+              -79.981025,
+              -1.856806
+            ],
+            [
+              -79.984303,
+              -1.858789
+            ],
+            [
+              -79.985135,
+              -1.862
+            ],
+            [
+              -79.983908,
+              -1.864971
+            ],
+            [
+              -79.980988,
+              -1.867099
+            ],
+            [
+              -79.977233,
+              -1.866531
+            ],
+            [
+              -79.97367,
+              -1.865227
+            ],
+            [
+              -79.972826,
+              -1.862
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "COMUNA_PUEBLO_NUEVO",
+        "name": "Comuna Pueblo Nuevo",
+        "basin_id": "daule",
+        "zone_type": "community",
+        "crop": "Arroz",
+        "area_hectares": 117.1,
+        "irrigated_area_pct": 8.5,
+        "irrigated_area_ha": 9.9,
+        "baseline_water_pct": 3.1,
+        "sar_backscatter_db": -8.7,
+        "sar_delta_db": 0.1,
+        "soil_moisture_m3m3": 0.13,
+        "ndvi": 0.27,
+        "status": "deficit",
+        "status_label": "Déficit hídrico / suelo seco",
+        "observation_date": "2026-11-10",
+        "baseline_date": "2026-08-15",
+        "sensor": "NISAR GCOV (simulado)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -79.955353,
+              -1.892
+            ],
+            [
+              -79.95671,
+              -1.889044
+            ],
+            [
+              -79.959813,
+              -1.886822
+            ],
+            [
+              -79.964027,
+              -1.8872
+            ],
+            [
+              -79.96711,
+              -1.889144
+            ],
+            [
+              -79.968091,
+              -1.892
+            ],
+            [
+              -79.967614,
+              -1.895137
+            ],
+            [
+              -79.963809,
+              -1.896282
+            ],
+            [
+              -79.95994,
+              -1.896878
+            ],
+            [
+              -79.956944,
+              -1.894826
+            ],
+            [
+              -79.955353,
+              -1.892
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "AGROEXPORT_CERECITA",
+        "name": "Agroexportadora Cerecita",
+        "basin_id": "santa-elena",
+        "zone_type": "commercial_farm",
+        "crop": "Mango",
+        "area_hectares": 498.6,
+        "irrigated_area_pct": 83.9,
+        "irrigated_area_ha": 418.4,
+        "baseline_water_pct": 2.5,
+        "sar_backscatter_db": -18.3,
+        "sar_delta_db": -5.2,
+        "soil_moisture_m3m3": 0.42,
+        "ndvi": 0.78,
+        "status": "excessive",
+        "status_label": "Exceso de agua superficial detectado",
+        "observation_date": "2026-11-10",
+        "baseline_date": "2026-08-15",
+        "sensor": "NISAR GCOV (simulado)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -80.586672,
+              -2.222
+            ],
+            [
+              -80.589663,
+              -2.216223
+            ],
+            [
+              -80.596103,
+              -2.212774
+            ],
+            [
+              -80.604093,
+              -2.21231
+            ],
+            [
+              -80.61035,
+              -2.216215
+            ],
+            [
+              -80.614109,
+              -2.222
+            ],
+            [
+              -80.611152,
+              -2.228233
+            ],
+            [
+              -80.604148,
+              -2.231819
+            ],
+            [
+              -80.595599,
+              -2.232419
+            ],
+            [
+              -80.589009,
+              -2.228142
+            ],
+            [
+              -80.586672,
+              -2.222
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "HACIENDA_SUBE_BAJA",
+        "name": "Hacienda Sube y Baja",
+        "basin_id": "santa-elena",
+        "zone_type": "commercial_farm",
+        "crop": "Banano",
+        "area_hectares": 323.1,
+        "irrigated_area_pct": 48.7,
+        "irrigated_area_ha": 157.4,
+        "baseline_water_pct": 5.6,
+        "sar_backscatter_db": -13.5,
+        "sar_delta_db": -2.3,
+        "soil_moisture_m3m3": 0.36,
+        "ndvi": 0.55,
+        "status": "normal",
+        "status_label": "Riego dentro de lo esperado",
+        "observation_date": "2026-11-10",
+        "baseline_date": "2026-08-15",
+        "sensor": "NISAR GCOV (simulado)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -80.556519,
+              -2.244
+            ],
+            [
+              -80.558623,
+              -2.239574
+            ],
+            [
+              -80.563485,
+              -2.236131
+            ],
+            [
+              -80.570453,
+              -2.236271
+            ],
+            [
+              -80.575507,
+              -2.239505
+            ],
+            [
+              -80.578585,
+              -2.244
+            ],
+            [
+              -80.575091,
+              -2.248275
+            ],
+            [
+              -80.57059,
+              -2.252035
+            ],
+            [
+              -80.563299,
+              -2.252285
+            ],
+            [
+              -80.557438,
+              -2.249053
+            ],
+            [
+              -80.556519,
+              -2.244
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "FINCA_EL_AZUCAR",
+        "name": "Finca El Azúcar",
+        "basin_id": "santa-elena",
+        "zone_type": "smallholder",
+        "crop": "Maíz",
+        "area_hectares": 73.9,
+        "irrigated_area_pct": 9.9,
+        "irrigated_area_ha": 7.3,
+        "baseline_water_pct": 7.6,
+        "sar_backscatter_db": -7.4,
+        "sar_delta_db": -0.7,
+        "soil_moisture_m3m3": 0.15,
+        "ndvi": 0.31,
+        "status": "deficit",
+        "status_label": "Déficit hídrico / suelo seco",
+        "observation_date": "2026-11-10",
+        "baseline_date": "2026-08-15",
+        "sensor": "NISAR GCOV (simulado)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -80.586506,
+              -2.253
+            ],
+            [
+              -80.588145,
+              -2.250759
+            ],
+            [
+              -80.590391,
+              -2.249038
+            ],
+            [
+              -80.593643,
+              -2.248954
+            ],
+            [
+              -80.596428,
+              -2.250426
+            ],
+            [
+              -80.596594,
+              -2.253
+            ],
+            [
+              -80.595764,
+              -2.255188
+            ],
+            [
+              -80.593536,
+              -2.256783
+            ],
+            [
+              -80.590453,
+              -2.25681
+            ],
+            [
+              -80.587903,
+              -2.255382
+            ],
+            [
+              -80.586506,
+              -2.253
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "COMUNA_SACACHUN",
+        "name": "Comuna Sacachún",
+        "basin_id": "santa-elena",
+        "zone_type": "community",
+        "crop": "Maíz",
+        "area_hectares": 94.6,
+        "irrigated_area_pct": 7.7,
+        "irrigated_area_ha": 7.3,
+        "baseline_water_pct": 4.7,
+        "sar_backscatter_db": -8.6,
+        "sar_delta_db": -0.7,
+        "soil_moisture_m3m3": 0.14,
+        "ndvi": 0.26,
+        "status": "deficit",
+        "status_label": "Déficit hídrico / suelo seco",
+        "observation_date": "2026-11-10",
+        "baseline_date": "2026-08-15",
+        "sensor": "NISAR GCOV (simulado)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -80.569333,
+              -2.229
+            ],
+            [
+              -80.569737,
+              -2.226132
+            ],
+            [
+              -80.573119,
+              -2.224659
+            ],
+            [
+              -80.576681,
+              -2.225119
+            ],
+            [
+              -80.579381,
+              -2.226613
+            ],
+            [
+              -80.580559,
+              -2.229
+            ],
+            [
+              -80.579717,
+              -2.231571
+            ],
+            [
+              -80.576759,
+              -2.23306
+            ],
+            [
+              -80.573001,
+              -2.233614
+            ],
+            [
+              -80.569843,
+              -2.23181
+            ],
+            [
+              -80.569333,
+              -2.229
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
