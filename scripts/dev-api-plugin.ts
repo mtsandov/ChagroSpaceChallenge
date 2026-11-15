@@ -1,4 +1,4 @@
-import type { Plugin, ViteDevServer } from 'vite';
+import { loadEnv, type Plugin, type ViteDevServer } from 'vite';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -12,6 +12,8 @@ export function devApiPlugin(): Plugin {
   return {
     name: 'chagro-dev-api',
     configureServer(server: ViteDevServer) {
+      const env = loadEnv(server.config.mode, server.config.root, '');
+      for (const [k, v] of Object.entries(env)) if (process.env[k] === undefined) process.env[k] = v;
       server.middlewares.use(async (req, res, next) => {
         if (!req.url?.startsWith('/api/')) return next();
 
