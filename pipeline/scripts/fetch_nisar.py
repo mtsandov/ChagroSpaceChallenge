@@ -9,7 +9,7 @@ import rasterio
 from rasterio.transform import from_origin
 from rasterio.warp import transform_bounds
 
-from config import BBOX, DATA, END, NISAR_DATES, NISAR_TRACK_FRAME, START
+from config import BBOX, DATA, END, NISAR_DATES, NISAR_TIMELINE, NISAR_TRACK_FRAME, START
 
 GCOV = ("NISAR_L2_GCOV_V1", "NISAR_L2_GCOV_PROVISIONAL_V1")
 SME2 = ("NISAR_L3_SME2_V1", "NISAR_L3_SME2_PROVISIONAL_V1")
@@ -48,6 +48,20 @@ def save(path, arr, tf, epsg):
         d.write(arr, 1)
 
 
+def read_pol(g, pol, label):
+    for attempt in range(4):
+        try:
+            f = h5py.File(earthaccess.open([g])[0], "r")
+            grid = f["science/LSAR/GCOV/grids/frequencyA"]
+            epsg = int(grid["projection"].attrs["epsg_code"])
+            lin, tf = crop(grid, pol, epsg)
+            return lin, tf, epsg
+        except Exception as e:
+            print(f"reintento {attempt + 1} {label} {pol}: {e.__class__.__name__}")
+            time.sleep(30)
+    raise SystemExit(f"No se pudo leer {label} {pol}")
+
+
 earthaccess.login(strategy="netrc")
 mpath = DATA / "nisar" / "manifest.json"
 old = json.loads(mpath.read_text()) if mpath.exists() else {}
@@ -64,18 +78,7 @@ for role, date in NISAR_DATES.items():
             with rasterio.open(path) as src:
                 db[(role, pol)] = (src.read(1), src.transform, src.crs.to_epsg())
             continue
-        for attempt in range(4):
-            try:
-                f = h5py.File(earthaccess.open([g])[0], "r")
-                grid = f["science/LSAR/GCOV/grids/frequencyA"]
-                epsg = int(grid["projection"].attrs["epsg_code"])
-                lin, tf = crop(grid, pol, epsg)
-                break
-            except Exception as e:
-                print(f"reintento {attempt + 1} {role} {pol}: {e.__class__.__name__}")
-                time.sleep(30)
-        else:
-            raise SystemExit(f"No se pudo leer {role} {pol}")
+        lin, tf, epsg = read_pol(g, pol, role)
         arr = 10 * np.log10(np.where(lin > 0, lin, np.nan))
         save(path, arr, tf, epsg)
         db[(role, pol)] = (arr, tf, epsg)
@@ -88,6 +91,23 @@ for pol in ("HHHH", "HVHV"):
     w = min(base[0].shape[1], act[0].shape[1])
     save(out / f"delta_{pol}_db.tif", act[0][:h, :w] - base[0][:h, :w], act[1], act[2])
 print("GCOV delta OK")
+
+manifest["timeline"] = {}
+tl = out / "timeline"
+for date in NISAR_TIMELINE:
+    g = gcov[date]
+    for pol in ("HHHH", "HVHV"):
+        path = tl / f"{date}_{pol}_db.tif"
+        if path.exists():
+            continue
+        known = [p for p in out.glob(f"*_{date}_{pol}_db.tif")]
+        if known:
+            path.write_bytes(known[0].read_bytes())
+            continue
+        lin, tf, epsg = read_pol(g, pol, date)
+        save(path, 10 * np.log10(np.where(lin > 0, lin, np.nan)), tf, epsg)
+    manifest["timeline"][date] = g["umm"]["GranuleUR"]
+    print(f"GCOV timeline {date} OK")
 
 out = DATA / "nisar" / "sme2"
 iso = lambda d: f"{d[:4]}-{d[4:6]}-{d[6:]}"

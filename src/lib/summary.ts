@@ -8,7 +8,6 @@ import type {
   BasinWeather,
   FarmerParcel,
   SarParcelCollection,
-  VirtualStation,
 } from '../types';
 import { et0FromPower } from './agro/power';
 import { stageForDate } from './agro/kc';
@@ -24,7 +23,6 @@ export interface BasinSummary {
   quotaPct: number;
   excessive: string[];
   deficit: string[];
-  lowestStation: VirtualStation | null;
   dailyEt0: { date: string; et0: number | null; rainfall: number }[];
 }
 
@@ -32,14 +30,12 @@ export function summarizeBasin(
   basin: Basin,
   weather: BasinWeather,
   parcels: SarParcelCollection,
-  stations: VirtualStation[],
 ): BasinSummary {
   const dailyEt0 = et0FromPower(weather.daily, weather.location.lat, weather.location.elevation_m);
   const last15 = dailyEt0.slice(-15);
   const last7 = dailyEt0.slice(-7).filter((d) => d.et0 !== null);
   const own = parcels.features.filter((f) => f.properties.basin_id === basin.id);
   const irrigatedHa = own.reduce((s, f) => s + f.properties.irrigated_area_ha, 0);
-  const ownStations = stations.filter((s) => s.basin_id === basin.id);
   const first = own[0]?.properties;
   const sarWindow = first
     ? {
@@ -53,11 +49,6 @@ export function summarizeBasin(
         ),
       }
     : null;
-  const lowestStation = ownStations.reduce<VirtualStation | null>(
-    (lo, s) => (lo === null || s.canal_level_pct < lo.canal_level_pct ? s : lo),
-    null,
-  );
-
   return {
     basin,
     rain15: round(last15.reduce((s, d) => s + d.rainfall, 0), 1),
@@ -67,7 +58,6 @@ export function summarizeBasin(
     quotaPct: Math.round(((irrigatedHa - basin.sustainable_quota_ha) / basin.sustainable_quota_ha) * 100),
     excessive: own.filter((f) => f.properties.status === 'excessive').map((f) => f.properties.name),
     deficit: own.filter((f) => f.properties.status === 'deficit').map((f) => f.properties.name),
-    lowestStation,
     dailyEt0,
   };
 }

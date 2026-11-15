@@ -4,11 +4,6 @@ import { loadData } from './api/client';
 
 const KEY = (userId: string) => `chagro.parcels.${userId}`;
 
-/**
- * Parcelas del agricultor.
- * Hoy: parcelas demo (/data/farmer_demo.json) + las creadas en este navegador (localStorage).
- * TODO(supabase): leer/escribir `farms`, `parcels` e `irrigation_systems` con RLS.
- */
 export function useFarmerParcels(userId: string | undefined) {
   const [parcels, setParcels] = useState<FarmerParcel[]>([]);
   const [loading, setLoading] = useState(true);

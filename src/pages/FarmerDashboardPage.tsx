@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Bar, CartesianGrid, ComposedChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { CalendarClock, Clock, Droplet, Gauge, Loader2, Plus, Sprout, Zap } from 'lucide-react';
 import TopNav from '../components/layout/TopNav';
 import ParcelForm from '../components/farmer/ParcelForm';
 import { useAuth } from '../context/AuthContext';
 import { useFarmerParcels } from '../lib/farmerStore';
-import { apiPost } from '../lib/api/client';
-import type { FarmerRecommendationResult } from '../lib/summary';
+import { useViewerData } from '../lib/api/useViewerData';
+import { recommendForParcel } from '../lib/summary';
 import { findCrop } from '../data/crops';
 
 const IRRIGATION_LABELS: Record<string, string> = {
@@ -20,14 +20,12 @@ const IRRIGATION_LABELS: Record<string, string> = {
 };
 
 export default function FarmerDashboardPage() {
-  const { user, getAccessToken } = useAuth();
+  const { user } = useAuth();
+  const { data } = useViewerData();
   const { parcels, loading, addParcel } = useFarmerParcels(user?.id);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [days, setDays] = useState(7);
   const [deficit, setDeficit] = useState(0);
-  const [result, setResult] = useState<FarmerRecommendationResult | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
@@ -36,22 +34,24 @@ export default function FarmerDashboardPage() {
 
   const selected = parcels.find((p) => p.id === selectedId) ?? null;
 
-  useEffect(() => {
-    if (!selected) return;
-    let alive = true;
-    setBusy(true);
-    setError(null);
-    getAccessToken()
-      .then((token) =>
-        apiPost<FarmerRecommendationResult>('/api/recommend', { parcel_id: selected.id, parcel: selected, days, deficit_pct: deficit }, token),
-      )
-      .then((r) => alive && setResult(r))
-      .catch((e: Error) => alive && setError(e.message))
-      .finally(() => alive && setBusy(false));
-    return () => {
-      alive = false;
-    };
-  }, [selected, days, deficit, getAccessToken]);
+  const result = useMemo(() => {
+    const weather = selected && data?.weather[selected.basin_id];
+    if (!selected || !weather) return null;
+    const nearest = data.parcels.features
+      .filter((f) => f.properties.basin_id === selected.basin_id)
+      .map((f) => {
+        const [lng, lat] = f.geometry.coordinates[0][0];
+        return { f, d: Math.hypot(lat - selected.center[0], lng - selected.center[1]) };
+      })
+      .sort((x, y) => x.d - y.d)[0]?.f;
+    return recommendForParcel(selected, weather, {
+      days,
+      deficitFraction: deficit / 100,
+      soilMoisture: nearest?.properties.soil_moisture_m3m3,
+    });
+  }, [selected, data, days, deficit]);
+  const error = selected && data && !data.weather[selected.basin_id] ? 'Sin datos de clima para la cuenca' : null;
+  const busy = !data;
 
   const rec = result?.recommendation;
 

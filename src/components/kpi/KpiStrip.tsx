@@ -1,7 +1,6 @@
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { CloudRain, Droplets, Waves } from 'lucide-react';
+import { CloudRain, Droplets } from 'lucide-react';
 import type { BasinSummary } from '../../lib/summary';
-import { ALERT_COLORS, ALERT_LABELS } from '../map/mapStyles';
 
 export default function KpiStrip({ summary }: { summary: BasinSummary }) {
   const chartData = summary.dailyEt0.slice(-15).map((d) => ({
@@ -9,13 +8,12 @@ export default function KpiStrip({ summary }: { summary: BasinSummary }) {
     et0: d.et0 === null ? null : Number(d.et0.toFixed(2)),
     lluvia: d.rainfall,
   }));
-  const station = summary.lowestStation;
   const win = summary.sarWindow;
   const dryWindow = win !== null && win.rain < 10;
   const overQuota = summary.quotaPct > 0;
 
   return (
-    <div className="grid gap-3 border-t border-slate-200 bg-white p-3 md:grid-cols-[repeat(3,minmax(0,1fr))_minmax(0,1.6fr)]">
+    <div className="grid gap-3 border-t border-slate-200 bg-white p-3 md:grid-cols-[repeat(2,minmax(0,1fr))_minmax(0,1.6fr)]">
       {win ? (
         <Kpi
           icon={<CloudRain size={18} />}
@@ -39,14 +37,6 @@ export default function KpiStrip({ summary }: { summary: BasinSummary }) {
         value={`${summary.irrigatedHa} ha`}
         hint={overQuota ? `+${summary.quotaPct}% sobre la cuota sostenible` : 'Dentro de la cuota sostenible'}
         tone={overQuota ? 'critical' : 'ok'}
-      />
-      <Kpi
-        icon={<Waves size={18} />}
-        title="Estero comunitario más bajo"
-        value={station ? `${station.canal_level_pct}%` : '—'}
-        hint={station ? `${station.name} · ${ALERT_LABELS[station.alert_level]}` : 'Sin estaciones'}
-        tone={station?.alert_level === 'critical_low' ? 'critical' : station?.alert_level === 'warning' ? 'warn' : 'ok'}
-        valueColor={station ? ALERT_COLORS[station.alert_level] : undefined}
       />
       <div className="card p-2">
         <div className="px-1 text-xs font-medium text-slate-500">ET₀ Penman-Monteith vs. lluvia (mm/día)</div>
