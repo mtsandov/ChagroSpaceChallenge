@@ -6,6 +6,7 @@ import LayerControls, { type LayerState } from './LayerControls';
 import MapLegend from './MapLegend';
 import ZonePopup from './ZonePopup';
 import { assetUrl } from '../../lib/api/client';
+import { useI18n } from '../../i18n';
 import TimeSlider from './TimeSlider';
 import {
   STATUS_COLORS,
@@ -43,6 +44,7 @@ export default function SarMap({ basin, parcels, waterBaseline, waterCurrent, wa
     parcels: true,
     colorBy: 'status',
   });
+  const { lang, zone } = useI18n();
   const analysisDate = parcels[0]?.properties.observation_date;
 
   const frames = useMemo(() => {
@@ -121,7 +123,7 @@ export default function SarMap({ basin, parcels, waterBaseline, waterCurrent, wa
                   }}
                   eventHandlers={{ click: () => onSelect({ kind: 'parcel', id: p.parcel_id }) }}
                 >
-                  <Tooltip sticky pane="tooltipPane">{p.name}</Tooltip>
+                  <Tooltip sticky pane="tooltipPane">{zone(p.name)}</Tooltip>
                   <Popup pane="popupPane" minWidth={250}>
                     <ZonePopup
                       p={p}
@@ -142,7 +144,7 @@ export default function SarMap({ basin, parcels, waterBaseline, waterCurrent, wa
             const style = { color: '#ffffff', weight: 2.5, dashArray: '6 4', fillColor: '#ffffff', fillOpacity: 0.15 };
             const label = (
               <Tooltip sticky pane="tooltipPane">
-                Mi parcela · {fp.name} ({fp.area_ha} ha)
+                {lang === 'en' ? 'My parcel' : 'Mi parcela'} · {fp.name} ({fp.area_ha} ha)
               </Tooltip>
             );
             return fp.polygon && fp.polygon.length >= 3 ? (

@@ -1,13 +1,27 @@
 {
-  "_note": "Respuestas del copiloto en la demo (sin IA). Las llaves coinciden con los ids de src/lib/copilot/chips.ts y las {{variables}} salen de src/lib/copilot/context.ts.",
-  "community": {
-    "transparency_report": "**Reporte de transparencia hídrica — {{basin}}**\n\n• Lluvia NASA POWER últimos 15 días: **{{rain15}} mm** (estación seca confirmada).\n• Área con agua superficial detectada por SAR: **{{irrigated_ha}} ha**, un **{{quota_pct}}% sobre la cuota sostenible**.\n• Parcelas con exceso de agua: {{excessive_list}}.\n\nComo no ha llovido, el agua que detecta el radar en esas parcelas viene del riego (canales o bombeo), no de la lluvia. Recomendamos llevar este reporte a la Junta de Agua para revisar los turnos de riego.",
-    "basin_summary": "**{{basin}}** está en plena época seca. ET₀ promedio: **{{et0_avg}} mm/día**. Hay {{n_excessive}} parcela(s) con exceso de agua superficial y {{n_deficit}} con déficit hídrico."
+  "_note": "Respuestas del copiloto sin IA, en español e inglés. Las llaves coinciden con los ids de src/lib/copilot/chips.ts y las {{variables}} salen de src/lib/copilot/context.ts.",
+  "es": {
+    "community": {
+      "transparency_report": "**Reporte de transparencia hídrica — {{basin}}**\n\n• Lluvia NASA POWER últimos 15 días: **{{rain15}} mm**.\n• Área con agua superficial detectada por SAR: **{{irrigated_ha}} ha**, un **{{quota_pct}}% sobre la cuota sostenible**.\n• Parcelas con exceso de agua: {{excessive_list}}.\n\nComo no ha llovido, el agua que detecta el radar en esas parcelas viene del riego (canales o bombeo), no de la lluvia. Recomendamos llevar este reporte a la Junta de Agua para revisar los turnos de riego.",
+      "basin_summary": "**{{basin}}** está en plena época seca. ET₀ promedio: **{{et0_avg}} mm/día**. Hay {{n_excessive}} parcela(s) con exceso de agua superficial y {{n_deficit}} con déficit hídrico."
+    },
+    "farmer": {
+      "pump_schedule": "**Horario de bombeo sugerido — {{parcel}}**\n\n• Necesidad de riego: **{{gross_mm}} mm** ({{volume_m3}} m³) para los últimos {{days}} días.\n• Tiempo de riego: **{{time_h}} h**.\n• Riega de madrugada (04:00–08:00): la evaporación es menor y la tarifa eléctrica suele ser más barata.\n• El pronóstico a 72 h no trae lluvia, así que conviene repartir el riego en 2–3 turnos.",
+      "savings_25": "Si reduces el riego un **25%** en **{{parcel}}**:\n\n• Ahorro de agua: **{{saved_m3}} m³**.\n• Ahorro de energía: **{{saved_kwh}} kWh**.\n• Esa reducción es **riego deficitario controlado**: aplícala en la etapa menos sensible del cultivo, no en floración ni en llenado de grano.",
+      "parcel_status": "El radar SAR muestra **{{irrigated_pct}}%** de la parcela con agua superficial y una humedad de suelo de **{{soil_moisture}} m³/m³**. Si ese valor está por encima de la capacidad de campo, puedes saltarte el próximo turno de riego sin afectar al cultivo."
+    },
+    "generic": "En esta demo respondo con los datos del mapa. Para preguntas específicas usa los botones rápidos, elige una zona o cambia la fecha en el slider."
   },
-  "farmer": {
-    "pump_schedule": "**Horario de bombeo sugerido — {{parcel}}**\n\n• Necesidad de riego: **{{gross_mm}} mm** ({{volume_m3}} m³) para los últimos {{days}} días.\n• Tiempo de riego: **{{time_h}} h**.\n• Riega de madrugada (04:00–08:00): la evaporación es menor y la tarifa eléctrica suele ser más barata.\n• El pronóstico a 72 h no trae lluvia, así que conviene repartir el riego en 2–3 turnos.",
-    "savings_25": "Si reduces el riego un **25%** en **{{parcel}}**:\n\n• Ahorro de agua: **{{saved_m3}} m³**.\n• Ahorro de energía: **{{saved_kwh}} kWh**.\n• Esa reducción es **riego deficitario controlado**: aplícala en la etapa menos sensible del cultivo, no en floración ni en llenado de grano.",
-    "parcel_status": "El radar SAR muestra **{{irrigated_pct}}%** de la parcela con agua superficial y una humedad de suelo de **{{soil_moisture}} m³/m³**. Si ese valor está por encima de la capacidad de campo, puedes saltarte el próximo turno de riego sin afectar al cultivo."
-  },
-  "generic": "En esta demo respondo con los datos del mapa. Para preguntas específicas usa los botones rápidos, elige una zona o cambia la fecha en el slider."
+  "en": {
+    "community": {
+      "transparency_report": "**Water transparency report — {{basin}}**\n\n• NASA POWER rain, last 15 days: **{{rain15}} mm**.\n• Surface water area detected by SAR: **{{irrigated_ha}} ha**, **{{quota_pct}}% above the sustainable quota**.\n• Zones with excess water: {{excessive_list}}.\n\nSince it has not rained, the water the radar detects in those zones comes from irrigation (canals or pumping), not from rain. We recommend taking this report to the Water Board to review the irrigation shifts.",
+      "basin_summary": "**{{basin}}** is in the middle of the dry season. Average ET₀: **{{et0_avg}} mm/day**. There are {{n_excessive}} zone(s) with excess surface water and {{n_deficit}} with a water deficit."
+    },
+    "farmer": {
+      "pump_schedule": "**Suggested pumping schedule — {{parcel}}**\n\n• Irrigation need: **{{gross_mm}} mm** ({{volume_m3}} m³) for the last {{days}} days.\n• Irrigation time: **{{time_h}} h**.\n• Irrigate at dawn (04:00–08:00): evaporation is lower and electricity is usually cheaper.\n• The 72 h forecast shows no rain, so split the irrigation into 2–3 shifts.",
+      "savings_25": "If you reduce irrigation by **25%** on **{{parcel}}**:\n\n• Water saved: **{{saved_m3}} m³**.\n• Energy saved: **{{saved_kwh}} kWh**.\n• This is **regulated deficit irrigation**: apply it in the least sensitive crop stage, not during flowering or grain filling.",
+      "parcel_status": "The SAR radar shows **{{irrigated_pct}}%** of the parcel with surface water and a soil moisture of **{{soil_moisture}} m³/m³**. If that value is above field capacity, you can skip the next irrigation shift without harming the crop."
+    },
+    "generic": "In this demo I answer with the map data. For specific questions use the quick buttons, pick a zone or change the date on the slider."
+  }
 }

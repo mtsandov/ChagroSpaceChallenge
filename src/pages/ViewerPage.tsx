@@ -8,19 +8,27 @@ import { useViewerData } from '../lib/api/useViewerData';
 import { summarizeBasin } from '../lib/summary';
 import { useAuth } from '../context/AuthContext';
 import { useFarmerParcels } from '../lib/farmerStore';
+import { useI18n } from '../i18n';
 import type { Role, Selection } from '../types';
 
 type MobileTab = 'map' | 'data' | 'chat';
 
-const TABS: { id: MobileTab; label: string; icon: typeof MapIcon }[] = [
-  { id: 'map', label: 'Mapa', icon: MapIcon },
-  { id: 'data', label: 'Datos', icon: BarChart3 },
-  { id: 'chat', label: 'Copiloto', icon: Bot },
+const TABS: { id: MobileTab; icon: typeof MapIcon }[] = [
+  { id: 'map', icon: MapIcon },
+  { id: 'data', icon: BarChart3 },
+  { id: 'chat', icon: Bot },
 ];
+
+const L = {
+  es: { map: 'Mapa', data: 'Datos', chat: 'Copiloto', loading: '{s.loading}', error: 'Error cargando datos' },
+  en: { map: 'Map', data: 'Data', chat: 'Copilot', loading: 'Loading satellite data…', error: 'Error loading data' },
+};
 
 export default function ViewerPage() {
   const { data, error } = useViewerData();
   const { user } = useAuth();
+  const { lang, zone } = useI18n();
+  const s = L[lang];
   const [basinId, setBasinId] = useState('daule');
   const [selection, setSelection] = useState<Selection>(null);
   const mode: Role = user?.role === 'farmer' ? 'farmer' : 'public';
@@ -43,8 +51,9 @@ export default function ViewerPage() {
 
   const selectionLabel = useMemo(() => {
     if (!selection || !data) return null;
-    return data.parcels.features.find((f) => f.properties.parcel_id === selection.id)?.properties.name ?? null;
-  }, [selection, data]);
+    const name = data.parcels.features.find((f) => f.properties.parcel_id === selection.id)?.properties.name;
+    return name ? zone(name) : null;
+  }, [selection, data, zone]);
 
   const changeBasin = (id: string) => {
     setBasinId(id);
@@ -55,7 +64,7 @@ export default function ViewerPage() {
     <div className="flex h-[100dvh] flex-col overflow-hidden">
       <TopNav basins={data?.basins} basinId={basinId} onBasinChange={changeBasin} />
 
-      {error && <div className="m-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">Error cargando datos: {error}</div>}
+      {error && <div className="m-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">{s.error}: {error}</div>}
 
       {!data || !basin || !summary ? (
         !error && (
@@ -84,7 +93,7 @@ export default function ViewerPage() {
             <div
               className={`absolute inset-0 overflow-y-auto bg-slate-100 lg:static lg:overflow-visible ${tab === 'data' ? '' : 'hidden lg:block'}`}
             >
-              <KpiStrip summary={summary} />
+              <KpiStrip summary={summary} passDate={passDate} timeline={data.timeline[basin.id]} zones={parcels} />
             </div>
           </section>
           <div className={`absolute inset-0 min-h-0 border-slate-200 lg:static lg:border-l ${tab === 'chat' ? '' : 'hidden lg:block'}`}>
@@ -111,7 +120,7 @@ export default function ViewerPage() {
               className={`flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${tab === t.id ? 'text-brand-700' : 'text-slate-500'}`}
             >
               <t.icon size={20} />
-              {t.label}
+              {s[t.id]}
             </button>
           ))}
         </nav>
