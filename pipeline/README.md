@@ -4,8 +4,9 @@ Scripts de Python que descargan y procesan los datos NASA (NISAR GCOV/SME2, SMAP
 y generan los archivos de `public/data/` que usa el visor.
 
 - **Formato de salida:** [`docs/DATA_CONTRACT.md`](../docs/DATA_CONTRACT.md)
-- **Zona, fechas y escenas:** `scripts/config.py`
-- Los rasters (`*.tif`, `*.h5`, `*.nc`) **no se versionan**: cada quien los descarga o los copia a `pipeline/data/`.
+- **Cuencas, fechas y escenas:** `scripts/config.py` (`BASINS`). Los datos van en `data/<basin_id>/` (`daule`, `santa-elena`).
+- **Elegir cuenca:** variable de entorno `BASIN` (por defecto `daule`), por ejemplo `BASIN=santa-elena python3 fetch_power.py`.
+- Los rasters (`*.tif`, `*.h5`, `*.nc`) **no se versionan**: cada quien los descarga o descomprime `chagro_tifs.zip` dentro de `pipeline/`.
 
 ## Entorno
 
@@ -23,9 +24,9 @@ En macOS o Linux: `pipeline/.venv/bin/python`.
 
 | Script | Genera | Notas |
 |---|---|---|
-| `fetch_power.py` | `data/power/*` | Sin login |
-| `fetch_geosfp.py` | `data/geosfp/*` | Sin login |
-| `fetch_ndvi.py`, `fetch_smap.py`, `fetch_nisar.py` | `data/ndvi`, `data/smap`, `data/nisar` | Requieren `~/.netrc` de NASA Earthdata |
+| `fetch_power.py` | `data/<basin>/power/*` | Sin login |
+| `fetch_geosfp.py` | `data/<basin>/geosfp/*` | Sin login |
+| `fetch_ndvi.py`, `fetch_smap.py`, `fetch_nisar.py` | `data/<basin>/ndvi`, `smap`, `nisar` | Requieren `~/.netrc` de NASA Earthdata |
 | `build_weather_daily.py` | `public/data/weather_daily.json` | POWER + pronóstico GEOS-FP |
 | `build_sar_layers.py` | `public/data/sar_water_mask_*.geojson` y `sar_irrigation_anomalies.geojson` | Ver abajo |
 
@@ -56,7 +57,7 @@ Para generar solo las máscaras de agua (no necesita parcelas):
    - Clasifica el estado: `excessive` si tiene ≥ 30 % de agua en época seca; `deficit` si tiene < 5 % de agua y además suelo seco o NDVI bajo; `normal` en los demás casos.
 4. Reemplaza en `public/data` solo las features de la cuenca de `config.BASIN_ID` y conserva las demás.
 
-Los umbrales se ajustan al inicio del script. La referencia está en `data/nisar/gcov/README.md`: 851 → 966 ha de agua en la zona completa.
+Los umbrales se ajustan al inicio del script. La referencia está en `data/<basin>/nisar/gcov/README.md`: en Daule, 851 → 966 ha de agua en la zona completa; en Santa Elena, 101 → 131 ha.
 
-**Parcelas:** usa la capa MAATE de cobertura 2022 recortada a Daule, en `data/parcelas/`.
+**Parcelas:** usa la capa MAATE de cobertura 2022 recortada a Daule, en `data/daule/parcelas/` (o la carpeta de la cuenca correspondiente).
 Los nombres se generan como IDs genéricos (`AGRO_DAULE_0001`, "Unidad agrícola 001"): **no publiques nombres reales de fincas ni de propietarios**.
