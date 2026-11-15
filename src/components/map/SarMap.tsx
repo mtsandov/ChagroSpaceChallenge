@@ -12,8 +12,6 @@ import {
   STATUS_COLORS,
   TREND_LABELS,
   WATER_STYLE,
-  ZONE_COLORS,
-  ZONE_LABELS,
 } from './mapStyles';
 
 interface Props {
@@ -41,7 +39,6 @@ export default function SarMap({ basin, parcels, waterBaseline, waterCurrent, st
     waterMask: true,
     parcels: true,
     stations: true,
-    colorBy: 'status',
     compare: false,
   });
   const [ratio, setRatio] = useState(0.5);
@@ -100,7 +97,7 @@ export default function SarMap({ basin, parcels, waterBaseline, waterCurrent, st
             parcels.map((f) => {
               const p = f.properties;
               const selected = selection?.kind === 'parcel' && selection.id === p.parcel_id;
-              const color = layers.colorBy === 'status' ? STATUS_COLORS[p.status] : ZONE_COLORS[p.zone_type];
+              const color = STATUS_COLORS[p.status];
               return (
                 <Polygon
                   key={p.parcel_id}
@@ -110,7 +107,6 @@ export default function SarMap({ basin, parcels, waterBaseline, waterCurrent, st
                     weight: selected ? 4 : 2,
                     fillColor: color,
                     fillOpacity: selected ? 0.25 : 0.12,
-                    dashArray: p.zone_type === 'community' ? '6 4' : undefined,
                   }}
                   eventHandlers={{ click: () => onSelect({ kind: 'parcel', id: p.parcel_id }) }}
                 >
@@ -119,7 +115,7 @@ export default function SarMap({ basin, parcels, waterBaseline, waterCurrent, st
                     <div className="min-w-[200px]">
                       <div className="text-sm font-semibold">{p.name}</div>
                       <div className="mb-2 text-[11px] text-slate-500">
-                        {ZONE_LABELS[p.zone_type]} · {p.crop}
+                        {p.crop}
                       </div>
                       <dl className="grid grid-cols-2 gap-x-3 gap-y-1">
                         <dt className="text-slate-500">Área</dt>
@@ -226,7 +222,7 @@ export default function SarMap({ basin, parcels, waterBaseline, waterCurrent, st
       )}
 
       <LayerControls value={layers} onChange={setLayers} />
-      <MapLegend colorBy={layers.colorBy} />
+      <MapLegend />
     </div>
   );
 }
