@@ -1,4 +1,4 @@
-import type { AlertLevel, ParcelStatus } from '../../types';
+import type { AlertLevel, ParcelStatus, ZoneType } from '../../types';
 
 /** Colores centralizados del mapa: ajustar aquí para cambiar el look de las capas. */
 export const STATUS_COLORS: Record<ParcelStatus, string> = {
@@ -11,6 +11,18 @@ export const STATUS_LABELS: Record<ParcelStatus, string> = {
   excessive: 'Exceso de agua',
   normal: 'Riego normal',
   deficit: 'Déficit hídrico',
+};
+
+export const ZONE_COLORS: Record<ZoneType, string> = {
+  commercial_farm: '#a855f7',
+  smallholder: '#f59e0b',
+  community: '#10b981',
+};
+
+export const ZONE_LABELS: Record<ZoneType, string> = {
+  commercial_farm: 'Finca comercial',
+  smallholder: 'Pequeño productor',
+  community: 'Zona comunitaria',
 };
 
 export const ALERT_COLORS: Record<AlertLevel, string> = {

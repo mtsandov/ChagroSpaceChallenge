@@ -5,6 +5,7 @@ export interface LayerState {
   waterMask: boolean;
   parcels: boolean;
   stations: boolean;
+  colorBy: 'status' | 'zone';
   compare: boolean;
 }
 
@@ -35,6 +36,21 @@ export default function LayerControls({ value, onChange }: Props) {
             <Toggle label="Máscara de agua SAR" checked={value.waterMask} onChange={(v) => set('waterMask', v)} />
             <Toggle label="Parcelas" checked={value.parcels} onChange={(v) => set('parcels', v)} />
             <Toggle label="Estaciones de canal" checked={value.stations} onChange={(v) => set('stations', v)} />
+
+            <div className="pt-1">
+              <div className="label">Colorear parcelas por</div>
+              <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-100 p-0.5 text-xs">
+                {(['status', 'zone'] as const).map((k) => (
+                  <button
+                    key={k}
+                    className={`rounded-md px-2 py-1 ${value.colorBy === k ? 'bg-white font-semibold shadow' : 'text-slate-500'}`}
+                    onClick={() => set('colorBy', k)}
+                  >
+                    {k === 'status' ? 'Estado SAR' : 'Finca / comunidad'}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <button
               className={`btn mt-1 w-full py-1.5 text-xs ${value.compare ? 'bg-sky-600 text-white hover:bg-sky-700' : 'btn-secondary'}`}

@@ -1,10 +1,10 @@
-import { ALERT_COLORS, ALERT_LABELS, STATUS_COLORS, STATUS_LABELS, WATER_STYLE } from './mapStyles';
+import { ALERT_COLORS, ALERT_LABELS, STATUS_COLORS, STATUS_LABELS, WATER_STYLE, ZONE_COLORS, ZONE_LABELS } from './mapStyles';
 
-export default function MapLegend() {
-  const parcelItems = (Object.keys(STATUS_COLORS) as (keyof typeof STATUS_COLORS)[]).map((k) => [
-    STATUS_LABELS[k],
-    STATUS_COLORS[k],
-  ]);
+export default function MapLegend({ colorBy }: { colorBy: 'status' | 'zone' }) {
+  const parcelItems =
+    colorBy === 'status'
+      ? (Object.keys(STATUS_COLORS) as (keyof typeof STATUS_COLORS)[]).map((k) => [STATUS_LABELS[k], STATUS_COLORS[k]])
+      : (Object.keys(ZONE_COLORS) as (keyof typeof ZONE_COLORS)[]).map((k) => [ZONE_LABELS[k], ZONE_COLORS[k]]);
 
   return (
     <div className="card absolute bottom-6 left-3 z-[500] hidden space-y-2 p-3 text-[11px] sm:block">
