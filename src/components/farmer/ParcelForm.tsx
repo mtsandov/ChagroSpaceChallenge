@@ -2,6 +2,67 @@ import { useState, type FormEvent } from 'react';
 import type { FarmerParcel, IrrigationType } from '../../types';
 import { CROPS, SOIL_TYPES } from '../../data/crops';
 import ParcelDrawMap, { polygonAreaHa, polygonCenter } from './ParcelDrawMap';
+import { useI18n } from '../../i18n';
+
+const L = {
+  es: {
+    title: 'Nueva parcela y sistema de riego',
+    name: 'Nombre',
+    namePh: 'Lote 3',
+    basin: 'Cuenca',
+    area: 'Área (ha)',
+    crop: 'Cultivo',
+    planting: 'Fecha de siembra',
+    soil: 'Suelo',
+    location: 'Ubicación de la parcela',
+    draw: 'Dibujar en el mapa',
+    dataOnly: 'Solo datos',
+    drawError: '{s.drawError}',
+    centerNote: 'La parcela se ubicará en el centro de la cuenca con el área que indiques arriba.',
+    system: 'Sistema de riego',
+    type: 'Tipo',
+    efficiency: 'Eficiencia (%)',
+    plants: 'Nº de plantas',
+    canopy: 'Radio de copa (m)',
+    emitterFlow: 'Caudal por emisor (L/h)',
+    emitters: 'Emisores por planta',
+    systemFlow: 'Caudal del sistema (m³/h)',
+    percolation: 'Percolación (mm/día)',
+    pumpKw: 'Potencia bomba (kW)',
+    pumpHead: 'Altura de bombeo (m)',
+    cancel: 'Cancelar',
+    save: 'Guardar parcela',
+  },
+  en: {
+    title: 'New parcel and irrigation system',
+    name: 'Name',
+    namePh: 'Lot 3',
+    basin: 'Basin',
+    area: 'Area (ha)',
+    crop: 'Crop',
+    planting: 'Planting date',
+    soil: 'Soil',
+    location: 'Parcel location',
+    draw: 'Draw on the map',
+    dataOnly: 'Data only',
+    drawError: 'Mark at least 3 corners or choose "Data only".',
+    centerNote: 'The parcel will be placed at the basin center with the area you enter above.',
+    system: 'Irrigation system',
+    type: 'Type',
+    efficiency: 'Efficiency (%)',
+    plants: 'Number of plants',
+    canopy: 'Canopy radius (m)',
+    emitterFlow: 'Flow per emitter (L/h)',
+    emitters: 'Emitters per plant',
+    systemFlow: 'System flow (m³/h)',
+    percolation: 'Percolation (mm/day)',
+    pumpKw: 'Pump power (kW)',
+    pumpHead: 'Pumping head (m)',
+    cancel: 'Cancel',
+    save: 'Save parcel',
+  },
+};
+
 
 const BASINS = [
   { id: 'daule', name: 'Daule', center: [-1.865, -79.985] as [number, number] },
@@ -35,6 +96,8 @@ export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerPar
     pump_kw: 10,
     pump_head_m: 10,
   });
+  const { lang, tx } = useI18n();
+  const s = L[lang];
   const [draw, setDraw] = useState(true);
   const [points, setPoints] = useState<[number, number][]>([]);
   const [drawError, setDrawError] = useState(false);
@@ -82,13 +145,13 @@ export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerPar
 
   return (
     <form onSubmit={submit} className="card space-y-4 p-4">
-      <div className="text-lg font-semibold">Nueva parcela y sistema de riego</div>
+      <div className="text-lg font-semibold">{s.title}</div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <Field label="Nombre">
-          <input className="input" required value={f.name} onChange={(e) => set('name', e.target.value)} placeholder="Lote 3" />
+        <Field label={s.name}>
+          <input className="input" required value={f.name} onChange={(e) => set('name', e.target.value)} placeholder={s.namePh} />
         </Field>
-        <Field label="Cuenca">
+        <Field label={s.basin}>
           <select
             className="input"
             value={f.basin_id}
@@ -98,11 +161,11 @@ export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerPar
             }}
           >
             {BASINS.map((b) => (
-              <option key={b.id} value={b.id}>{b.name}</option>
+              <option key={b.id} value={b.id}>{tx(`basin.${b.id}.name`, b.name)}</option>
             ))}
           </select>
         </Field>
-        <Field label="Área (ha)">
+        <Field label={s.area}>
           <input
             className="input"
             type="number"
@@ -114,20 +177,20 @@ export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerPar
             onChange={(e) => set('area_ha', e.target.value)}
           />
         </Field>
-        <Field label="Cultivo">
+        <Field label={s.crop}>
           <select className="input" value={f.crop_id} onChange={(e) => set('crop_id', e.target.value)}>
             {CROPS.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
+              <option key={c.id} value={c.id}>{tx(`crop.${c.id}`, c.name)}</option>
             ))}
           </select>
         </Field>
-        <Field label="Fecha de siembra">
+        <Field label={s.planting}>
           <input className="input" type="date" required value={f.planting_date} onChange={(e) => set('planting_date', e.target.value)} />
         </Field>
-        <Field label="Suelo">
+        <Field label={s.soil}>
           <select className="input" value={f.soil_type_id} onChange={(e) => set('soil_type_id', e.target.value)}>
-            {SOIL_TYPES.map((s) => (
-              <option key={s.id} value={s.id}>{s.name}</option>
+            {SOIL_TYPES.map((soil) => (
+              <option key={soil.id} value={soil.id}>{tx(`soil.${soil.id}`, soil.name)}</option>
             ))}
           </select>
         </Field>
@@ -135,11 +198,11 @@ export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerPar
 
       <div className="border-t border-slate-100 pt-4">
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-          <div className="text-sm font-semibold">Ubicación de la parcela</div>
+          <div className="text-sm font-semibold">{s.location}</div>
           <div className="flex rounded-lg bg-slate-100 p-0.5 text-xs">
             {[
-              { v: true, label: 'Dibujar en el mapa' },
-              { v: false, label: 'Solo datos' },
+              { v: true, label: s.draw },
+              { v: false, label: s.dataOnly },
             ].map((o) => (
               <button
                 key={o.label}
@@ -168,14 +231,14 @@ export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerPar
             {drawError && <div className="mt-2 text-xs text-red-600">Marca al menos 3 esquinas o elige "Solo datos".</div>}
           </>
         ) : (
-          <p className="text-xs text-slate-500">La parcela se ubicará en el centro de la cuenca con el área que indiques arriba.</p>
+          <p className="text-xs text-slate-500">{s.centerNote}</p>
         )}
       </div>
 
       <div className="border-t border-slate-100 pt-4">
-        <div className="mb-2 text-sm font-semibold">Sistema de riego</div>
+        <div className="mb-2 text-sm font-semibold">{s.system}</div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Field label="Tipo">
+          <Field label={s.type}>
             <select
               className="input"
               value={f.type}
@@ -185,52 +248,52 @@ export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerPar
               }}
             >
               {TYPES.map((t) => (
-                <option key={t.id} value={t.id}>{t.label}</option>
+                <option key={t.id} value={t.id}>{tx(`irrigation.${t.id}`, t.label)}</option>
               ))}
             </select>
           </Field>
-          <Field label="Eficiencia (%)">
+          <Field label={s.efficiency}>
             <input className="input" type="number" min={10} max={100} required value={f.efficiency} onChange={(e) => set('efficiency', e.target.value)} />
           </Field>
           {type.mode === 'per_plant' ? (
             <>
-              <Field label="Nº de plantas">
+              <Field label={s.plants}>
                 <input className="input" type="number" min={1} required value={f.num_plants} onChange={(e) => set('num_plants', e.target.value)} />
               </Field>
-              <Field label="Radio de copa (m)">
+              <Field label={s.canopy}>
                 <input className="input" type="number" min={0.1} step={0.1} required value={f.canopy_radius_m} onChange={(e) => set('canopy_radius_m', e.target.value)} />
               </Field>
-              <Field label="Caudal por emisor (L/h)">
+              <Field label={s.emitterFlow}>
                 <input className="input" type="number" min={0.1} step={0.1} required value={f.flow_rate_lph} onChange={(e) => set('flow_rate_lph', e.target.value)} />
               </Field>
-              <Field label="Emisores por planta">
+              <Field label={s.emitters}>
                 <input className="input" type="number" min={1} required value={f.emitters} onChange={(e) => set('emitters', e.target.value)} />
               </Field>
             </>
           ) : (
             <>
-              <Field label="Caudal del sistema (m³/h)">
+              <Field label={s.systemFlow}>
                 <input className="input" type="number" min={1} required value={f.system_flow_m3h} onChange={(e) => set('system_flow_m3h', e.target.value)} />
               </Field>
               {f.crop_id === 'rice' && (
-                <Field label="Percolación (mm/día)">
+                <Field label={s.percolation}>
                   <input className="input" type="number" min={0} step={0.5} value={f.percolation_mm_day} onChange={(e) => set('percolation_mm_day', e.target.value)} />
                 </Field>
               )}
             </>
           )}
-          <Field label="Potencia bomba (kW)">
+          <Field label={s.pumpKw}>
             <input className="input" type="number" min={0} step={0.5} value={f.pump_kw} onChange={(e) => set('pump_kw', e.target.value)} />
           </Field>
-          <Field label="Altura de bombeo (m)">
+          <Field label={s.pumpHead}>
             <input className="input" type="number" min={0} step={0.5} value={f.pump_head_m} onChange={(e) => set('pump_head_m', e.target.value)} />
           </Field>
         </div>
       </div>
 
       <div className="flex justify-end gap-2">
-        <button type="button" className="btn-secondary" onClick={onCancel}>Cancelar</button>
-        <button type="submit" className="btn-primary">Guardar parcela</button>
+        <button type="button" className="btn-secondary" onClick={onCancel}>{s.cancel}</button>
+        <button type="submit" className="btn-primary">{s.save}</button>
       </div>
     </form>
   );

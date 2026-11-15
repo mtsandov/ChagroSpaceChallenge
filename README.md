@@ -1,5 +1,7 @@
 # ChAgro — SAR Water Transparency Monitor
 
+**🌐 Demo: https://mtsandov.github.io/ChagroSpaceChallenge/**
+
 Visor geoespacial y copiloto para auditar el agua agrícola y recomendar riego en época seca con datos NASA.
 **NASA Space Apps Challenge Guayaquil 2026 · Dancing with the SARs.**
 

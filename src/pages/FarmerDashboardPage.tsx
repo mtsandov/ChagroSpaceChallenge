@@ -7,20 +7,102 @@ import { useAuth } from '../context/AuthContext';
 import { useFarmerParcels } from '../lib/farmerStore';
 import { useViewerData } from '../lib/api/useViewerData';
 import { recommendForParcel } from '../lib/summary';
-import { findCrop } from '../data/crops';
+import { useI18n } from '../i18n';
 
-const IRRIGATION_LABELS: Record<string, string> = {
-  drip: 'Goteo',
-  sprinkler: 'Aspersión',
-  micro_sprinkler: 'Microaspersión',
-  furrow: 'Surcos',
-  flood: 'Inundación',
-  subsurface: 'Subterráneo',
-  other: 'Otro',
+const L = {
+  es: {
+    noWeather: 'Sin datos de clima para la cuenca',
+    myParcels: 'Mis parcelas',
+    add: 'Nueva',
+    loading: 'Cargando…',
+    advice: 'Recomendación de riego',
+    stage: 'etapa',
+    day: 'día',
+    soil: 'suelo',
+    period: 'Período',
+    days: 'días',
+    deficitIrr: 'Riego deficitario',
+    gross: 'Lámina bruta',
+    net: 'neta',
+    eff: 'ef.',
+    volume: 'Volumen total',
+    perPlant: 'L/planta',
+    time: 'Tiempo de riego',
+    forDays: 'para {{n}} días',
+    energy: 'Energía de bombeo',
+    saving: 'ahorro',
+    noReduction: 'sin reducción',
+    chart: 'ETc diaria vs. lluvia (mm)',
+    rain: 'Lluvia',
+    effRain: 'Lluvia efectiva',
+    percolation: 'Percolación',
+    soilMoisture: 'Humedad del suelo (SAR)',
+    irrigateToday: 'Regar hoy',
+    inDays: 'En {{n}} días',
+    nextIrrigation: 'próximo riego estimado',
+    observed: 'Humedad observada',
+    rawText: 'Se riega cuando el agotamiento supera el umbral RAW ({{raw}} mm) de {{taw}} mm disponibles en la zona radicular.',
+    deficitText: 'Con un riego deficitario del {{pct}}% ahorras {{m3}} m³ de agua y {{kwh}} kWh.',
+    empty: 'Registra tu primera parcela para recibir recomendaciones.',
+    computing: 'Calculando…',
+    fieldCapacity: 'Capacidad de campo',
+    wilting: 'Marchitez',
+    rawThreshold: 'Umbral RAW',
+    depletion: 'Agotamiento',
+    currentDepletion: 'Agotamiento actual',
+  },
+  en: {
+    noWeather: 'No weather data for this basin',
+    myParcels: 'My parcels',
+    add: 'New',
+    loading: 'Loading…',
+    advice: 'Irrigation advice',
+    stage: 'stage',
+    day: 'day',
+    soil: 'soil',
+    period: 'Period',
+    days: 'days',
+    deficitIrr: 'Deficit irrigation',
+    gross: 'Gross depth',
+    net: 'net',
+    eff: 'eff.',
+    volume: 'Total volume',
+    perPlant: 'L/plant',
+    time: 'Irrigation time',
+    forDays: 'for {{n}} days',
+    energy: 'Pumping energy',
+    saving: 'saving',
+    noReduction: 'no reduction',
+    chart: 'Daily ETc vs. rain (mm)',
+    rain: 'Rain',
+    effRain: 'Effective rain',
+    percolation: 'Percolation',
+    soilMoisture: 'Soil moisture (SAR)',
+    irrigateToday: 'Irrigate today',
+    inDays: 'In {{n}} days',
+    nextIrrigation: 'estimated next irrigation',
+    observed: 'Observed moisture',
+    rawText: 'Irrigate when depletion exceeds the RAW threshold ({{raw}} mm) of the {{taw}} mm available in the root zone.',
+    deficitText: 'With {{pct}}% deficit irrigation you save {{m3}} m³ of water and {{kwh}} kWh.',
+    empty: 'Register your first parcel to get recommendations.',
+    computing: 'Calculating…',
+    fieldCapacity: 'Field capacity',
+    wilting: 'Wilting point',
+    rawThreshold: 'RAW threshold',
+    depletion: 'Depletion',
+    currentDepletion: 'Current depletion',
+  },
 };
+
+type Strings = (typeof L)['es'];
+
+const fill = (t: string, v: Record<string, string | number>) => t.replace(/\{\{(\w+)\}\}/g, (_, k: string) => String(v[k] ?? ''));
 
 export default function FarmerDashboardPage() {
   const { user } = useAuth();
+  const { lang, tx, locale } = useI18n();
+  const s = L[lang];
+  const fmt = (v: number) => v.toLocaleString(locale, { maximumFractionDigits: v < 10 ? 2 : 0 });
   const { data } = useViewerData();
   const { parcels, loading, addParcel } = useFarmerParcels(user?.id);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -50,7 +132,7 @@ export default function FarmerDashboardPage() {
       soilMoisture: nearest?.properties.soil_moisture_m3m3,
     });
   }, [selected, data, days, deficit]);
-  const error = selected && data && !data.weather[selected.basin_id] ? 'Sin datos de clima para la cuenca' : null;
+  const error = selected && data && !data.weather[selected.basin_id] ? s.noWeather : null;
   const busy = !data;
 
   const rec = result?.recommendation;
@@ -59,15 +141,14 @@ export default function FarmerDashboardPage() {
     <div className="flex min-h-full flex-col">
       <TopNav />
       <main className="mx-auto grid w-full max-w-7xl flex-1 gap-4 p-4 lg:grid-cols-[280px_minmax(0,1fr)]">
-        {/* Lista de parcelas */}
         <aside className="space-y-3">
           <div className="flex items-center justify-between">
-            <h1 className="text-lg font-bold">Mis parcelas</h1>
+            <h1 className="text-lg font-bold">{s.myParcels}</h1>
             <button className="btn-primary px-2.5 py-1.5 text-xs" onClick={() => setShowForm(true)}>
-              <Plus size={14} /> Nueva
+              <Plus size={14} /> {s.add}
             </button>
           </div>
-          {loading && <div className="text-sm text-slate-500">Cargando…</div>}
+          {loading && <div className="text-sm text-slate-500">{s.loading}</div>}
           {parcels.map((p) => (
             <button
               key={p.id}
@@ -78,13 +159,12 @@ export default function FarmerDashboardPage() {
                 <Sprout size={16} className="text-brand-600" /> {p.name}
               </div>
               <div className="mt-1 text-xs text-slate-500">
-                {findCrop(p.crop_id)?.name} · {p.area_ha} ha · {IRRIGATION_LABELS[p.irrigation.type]}
+                {tx(`crop.${p.crop_id}`, p.crop_id)} · {p.area_ha} ha · {tx(`irrigation.${p.irrigation.type}`, p.irrigation.type)}
               </div>
             </button>
           ))}
         </aside>
 
-        {/* Recomendación */}
         <section className="min-w-0 space-y-4">
           {showForm && (
             <ParcelForm
@@ -100,17 +180,17 @@ export default function FarmerDashboardPage() {
           {selected && (
             <div className="card flex flex-wrap items-end gap-4 p-4">
               <div className="min-w-0 flex-1">
-                <div className="text-xs uppercase tracking-wide text-slate-500">Recomendación de riego</div>
+                <div className="text-xs uppercase tracking-wide text-slate-500">{s.advice}</div>
                 <div className="text-xl font-bold">{selected.name}</div>
                 {result && (
                   <div className="text-sm text-slate-500">
-                    {result.cropName} · etapa <strong>{result.stageName}</strong> (día {result.daysSincePlanting}) · Kc{' '}
-                    {rec?.kc} · suelo {result.soilName}
+                    {tx(`crop.${selected.crop_id}`, result.cropName)} · {s.stage} <strong>{tx(`stage.${result.stageName}`, result.stageName)}</strong> ({s.day}{' '}
+                    {result.daysSincePlanting}) · Kc {rec?.kc} · {s.soil} {tx(`soil.${selected.soil_type_id}`, result.soilName)}
                   </div>
                 )}
               </div>
               <div>
-                <span className="label">Período</span>
+                <span className="label">{s.period}</span>
                 <div className="flex rounded-lg bg-slate-100 p-0.5 text-xs">
                   {[7, 15, 30].map((d) => (
                     <button
@@ -118,14 +198,14 @@ export default function FarmerDashboardPage() {
                       onClick={() => setDays(d)}
                       className={`rounded-md px-3 py-1.5 ${days === d ? 'bg-white font-semibold shadow' : 'text-slate-500'}`}
                     >
-                      {d} días
+                      {d} {s.days}
                     </button>
                   ))}
                 </div>
               </div>
               <div className="w-48">
                 <label className="label" htmlFor="deficit">
-                  Riego deficitario: {deficit}%
+                  {s.deficitIrr}: {deficit}%
                 </label>
                 <input
                   id="deficit"
@@ -146,20 +226,20 @@ export default function FarmerDashboardPage() {
           {rec && result && (
             <div className={`space-y-4 transition-opacity ${busy ? 'opacity-60' : ''}`}>
               <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                <Stat icon={<Droplet size={16} />} label="Lámina bruta" value={`${rec.grossMm.toFixed(1)} mm`} sub={`neta ${rec.netMm.toFixed(1)} mm · ef. ${selected!.irrigation.efficiency}%`} />
+                <Stat icon={<Droplet size={16} />} label={s.gross} value={`${rec.grossMm.toFixed(1)} mm`} sub={`${s.net} ${rec.netMm.toFixed(1)} mm · ${s.eff} ${selected!.irrigation.efficiency}%`} />
                 <Stat
                   icon={<Gauge size={16} />}
-                  label="Volumen total"
+                  label={s.volume}
                   value={`${fmt(rec.volumeM3)} m³`}
-                  sub={rec.volumePerPlantL !== null ? `${rec.volumePerPlantL.toFixed(1)} L/planta` : `${selected!.area_ha} ha`}
+                  sub={rec.volumePerPlantL !== null ? `${rec.volumePerPlantL.toFixed(1)} ${s.perPlant}` : `${selected!.area_ha} ha`}
                 />
-                <Stat icon={<Clock size={16} />} label="Tiempo de riego" value={`${rec.irrigationTimeH.toFixed(1)} h`} sub={`para ${rec.days} días`} />
-                <Stat icon={<Zap size={16} />} label="Energía de bombeo" value={`${fmt(rec.energyKwh)} kWh`} sub={deficit > 0 ? `ahorro ${fmt(rec.savedKwh)} kWh` : 'sin reducción'} />
+                <Stat icon={<Clock size={16} />} label={s.time} value={`${rec.irrigationTimeH.toFixed(1)} h`} sub={fill(s.forDays, { n: rec.days })} />
+                <Stat icon={<Zap size={16} />} label={s.energy} value={`${fmt(rec.energyKwh)} kWh`} sub={deficit > 0 ? `${s.saving} ${fmt(rec.savedKwh)} kWh` : s.noReduction} />
               </div>
 
               <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
                 <div className="card p-4">
-                  <div className="mb-2 text-sm font-semibold">ETc diaria vs. lluvia (mm)</div>
+                  <div className="mb-2 text-sm font-semibold">{s.chart}</div>
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <ComposedChart data={rec.rows.map((r) => ({ date: r.date.slice(5), etc: +r.etc.toFixed(2), lluvia: r.rainfall }))}>
@@ -169,37 +249,36 @@ export default function FarmerDashboardPage() {
                         <Tooltip />
                         <Legend />
                         <Bar dataKey="etc" name="ETc (ET₀ × Kc)" fill="#f97316" radius={[3, 3, 0, 0]} />
-                        <Bar dataKey="lluvia" name="Lluvia" fill="#0ea5e9" radius={[3, 3, 0, 0]} />
+                        <Bar dataKey="lluvia" name={s.rain} fill="#0ea5e9" radius={[3, 3, 0, 0]} />
                       </ComposedChart>
                     </ResponsiveContainer>
                   </div>
                   <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-600 sm:grid-cols-4">
                     <Mini label="Σ ET₀" value={`${rec.et0Sum.toFixed(1)} mm`} />
                     <Mini label="Σ ETc" value={`${rec.etcSum.toFixed(1)} mm`} />
-                    <Mini label="Lluvia efectiva" value={`${rec.effectiveRainfallSum.toFixed(1)} mm`} />
-                    <Mini label="Percolación" value={`${rec.percolationSum.toFixed(1)} mm`} />
+                    <Mini label={s.effRain} value={`${rec.effectiveRainfallSum.toFixed(1)} mm`} />
+                    <Mini label={s.percolation} value={`${rec.percolationSum.toFixed(1)} mm`} />
                   </div>
                 </div>
 
                 <div className="card space-y-3 p-4">
                   <div className="flex items-center gap-2 text-sm font-semibold">
-                    <CalendarClock size={16} /> Humedad del suelo (SAR)
+                    <CalendarClock size={16} /> {s.soilMoisture}
                   </div>
                   <div
                     className={`rounded-lg p-3 text-center ${rec.needsIrrigationNow ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700'}`}
                   >
-                    <div className="text-2xl font-bold">{rec.needsIrrigationNow ? 'Regar hoy' : `En ${rec.daysUntilIrrigation} días`}</div>
-                    <div className="text-xs">próximo riego estimado</div>
+                    <div className="text-2xl font-bold">{rec.needsIrrigationNow ? s.irrigateToday : fill(s.inDays, { n: rec.daysUntilIrrigation })}</div>
+                    <div className="text-xs">{s.nextIrrigation}</div>
                   </div>
-                  <DepletionBar depletion={rec.currentDepletionMm} raw={rec.rawMm} taw={rec.tawMm} />
+                  <DepletionBar s={s} depletion={rec.currentDepletionMm} raw={rec.rawMm} taw={rec.tawMm} />
                   <p className="text-xs text-slate-500">
-                    Humedad observada: {result.soilMoisture ?? '—'} m³/m³. Se riega cuando el agotamiento supera el umbral RAW (
-                    {rec.rawMm.toFixed(0)} mm) de {rec.tawMm.toFixed(0)} mm disponibles en la zona radicular.
+                    {s.observed}: {result.soilMoisture ?? '—'} m³/m³.{' '}
+                    {fill(s.rawText, { raw: rec.rawMm.toFixed(0), taw: rec.tawMm.toFixed(0) })}
                   </p>
                   {deficit > 0 && (
                     <div className="rounded-lg bg-sky-50 p-3 text-xs text-sky-800">
-                      Con un riego deficitario del <strong>{deficit}%</strong> ahorras <strong>{fmt(rec.savedM3)} m³</strong> de agua y{' '}
-                      <strong>{fmt(rec.savedKwh)} kWh</strong>.
+                      {fill(s.deficitText, { pct: deficit, m3: fmt(rec.savedM3), kwh: fmt(rec.savedKwh) })}
                     </div>
                   )}
                 </div>
@@ -208,11 +287,11 @@ export default function FarmerDashboardPage() {
           )}
 
           {!selected && !loading && !showForm && (
-            <div className="card p-8 text-center text-slate-500">Registra tu primera parcela para recibir recomendaciones.</div>
+            <div className="card p-8 text-center text-slate-500">{s.empty}</div>
           )}
           {busy && !rec && (
             <div className="flex items-center gap-2 text-sm text-slate-500">
-              <Loader2 size={16} className="animate-spin" /> Calculando…
+              <Loader2 size={16} className="animate-spin" /> {s.computing}
             </div>
           )}
         </section>
@@ -221,7 +300,6 @@ export default function FarmerDashboardPage() {
   );
 }
 
-const fmt = (v: number) => v.toLocaleString('es-EC', { maximumFractionDigits: v < 10 ? 2 : 0 });
 
 function Stat({ icon, label, value, sub }: { icon: React.ReactNode; label: string; value: string; sub: string }) {
   return (
@@ -244,24 +322,24 @@ function Mini({ label, value }: { label: string; value: string }) {
   );
 }
 
-function DepletionBar({ depletion, raw, taw }: { depletion: number; raw: number; taw: number }) {
+function DepletionBar({ s, depletion, raw, taw }: { s: Strings; depletion: number; raw: number; taw: number }) {
   const pct = taw > 0 ? Math.min(100, (depletion / taw) * 100) : 0;
   const rawPct = taw > 0 ? (raw / taw) * 100 : 0;
   return (
     <div>
       <div className="mb-1 flex justify-between text-[11px] text-slate-500">
-        <span>Capacidad de campo</span>
-        <span>Marchitez</span>
+        <span>{s.fieldCapacity}</span>
+        <span>{s.wilting}</span>
       </div>
       <div className="relative h-3 rounded-full bg-gradient-to-r from-emerald-200 via-amber-200 to-red-300">
-        <div className="absolute top-0 h-3 w-0.5 bg-slate-700" style={{ left: `${rawPct}%` }} title="Umbral RAW" />
+        <div className="absolute top-0 h-3 w-0.5 bg-slate-700" style={{ left: `${rawPct}%` }} title={s.rawThreshold} />
         <div
           className="absolute -top-1 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-white bg-sky-600 shadow"
           style={{ left: `${pct}%` }}
-          title={`Agotamiento ${depletion.toFixed(1)} mm`}
+          title={`${s.depletion} ${depletion.toFixed(1)} mm`}
         />
       </div>
-      <div className="mt-1 text-[11px] text-slate-600">Agotamiento actual: {depletion.toFixed(1)} mm</div>
+      <div className="mt-1 text-[11px] text-slate-600">{s.currentDepletion}: {depletion.toFixed(1)} mm</div>
     </div>
   );
 }

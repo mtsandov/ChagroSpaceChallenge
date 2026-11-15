@@ -1,9 +1,11 @@
 import type { Basin, FarmerParcel, PassConditions, Role, SarParcelCollection, SarTimeline, Selection, WeatherDataset } from '../../types';
 import { summarizeBasin, recommendForParcel, type FarmerRecommendationResult } from '../summary';
 import { fillTemplate } from './chips';
+import { translateLoose, zoneName, localeOf, type Lang } from '../../i18n';
 
 export interface CopilotContext {
   role: Role;
+  lang: Lang;
   data: Record<string, unknown>;
   templateValues: Record<string, string | number>;
 }
@@ -15,11 +17,12 @@ export interface CopilotData {
   timeline: SarTimeline;
 }
 
-export type Fallbacks = { community: Record<string, string>; farmer: Record<string, string>; generic: string };
+export type FallbackSet = { community: Record<string, string>; farmer: Record<string, string>; generic: string };
+export type Fallbacks = Record<Lang, FallbackSet>;
 
 export function buildContext(
   source: CopilotData,
-  opts: { role: Role; basinId: string; selection: Selection; farmerParcel?: FarmerParcel | null; date?: string | null },
+  opts: { role: Role; lang: Lang; basinId: string; selection: Selection; farmerParcel?: FarmerParcel | null; date?: string | null },
 ): CopilotContext {
   const { basins, parcels, weather: weatherAll, timeline: timelineAll } = source;
   const basin = basins.find((b) => b.id === opts.basinId) ?? basins[0];
@@ -37,7 +40,7 @@ export function buildContext(
   const passZones = own.map((f) => {
     const pt = tl?.zones[f.properties.parcel_id]?.find((x) => x.date === passDate);
     return {
-      name: f.properties.name,
+      name: zoneName(f.properties.name, opts.lang),
       status: pt?.status ?? f.properties.status,
       water_pct: pt?.water_pct ?? f.properties.irrigated_area_pct,
       ndvi: pt?.ndvi ?? f.properties.ndvi,
@@ -48,7 +51,7 @@ export function buildContext(
   const byStatus = (st: string) => passZones.filter((z) => z.status === st).map((z) => z.name);
 
   const data: Record<string, unknown> = {
-    basin: { name: basin.name, sustainable_quota_ha: basin.sustainable_quota_ha },
+    basin: { name: translateLoose(opts.lang, `basin.${basin.id}.name`, basin.name), sustainable_quota_ha: basin.sustainable_quota_ha },
     nasa_power: { rain_last_15_days_mm: summary.rain15, et0_avg_last_7_days_mm: summary.et0Avg7 },
     selected_pass: {
       date: passDate,
@@ -66,25 +69,25 @@ export function buildContext(
       date: analysisDate,
       irrigated_area_ha: summary.irrigatedHa,
       above_quota_pct: summary.quotaPct,
-      parcels_with_excess_water: summary.excessive,
-      parcels_with_deficit: summary.deficit,
+      parcels_with_excess_water: summary.excessive.map((n) => zoneName(n, opts.lang)),
+      parcels_with_deficit: summary.deficit.map((n) => zoneName(n, opts.lang)),
     },
     forecast_72h: weather.forecast.daily,
     selected_parcel: selectedParcel
-      ? { ...selectedParcel.properties, on_selected_pass: passZones.find((z) => z.name === selectedParcel.properties.name) }
+      ? { ...selectedParcel.properties, on_selected_pass: passZones.find((z) => z.name === zoneName(selectedParcel.properties.name, opts.lang)) }
       : null,
   };
 
   const templateValues: Record<string, string | number> = {
-    basin: basin.name,
+    basin: translateLoose(opts.lang, `basin.${basin.id}.name`, basin.name),
     rain15: summary.rain15,
     et0_avg: summary.et0Avg7,
     irrigated_ha: summary.irrigatedHa,
     quota_pct: summary.quotaPct,
-    excessive_list: summary.excessive.join(', ') || 'ninguna',
+    excessive_list: summary.excessive.map((n) => zoneName(n, opts.lang)).join(', ') || (opts.lang === 'en' ? 'none' : 'ninguna'),
     n_excessive: summary.excessive.length,
     n_deficit: summary.deficit.length,
-    pass_note: passNote(passDate, analysisDate, cond, byStatus),
+    pass_note: passNote(opts.lang, passDate, analysisDate, cond, byStatus),
   };
 
   if (opts.role === 'farmer') {
@@ -126,25 +129,34 @@ export function buildContext(
     }
   }
 
-  return { role: opts.role, data, templateValues };
+  return { role: opts.role, lang: opts.lang, data, templateValues };
 }
 
 function passNote(
+  lang: Lang,
   date: string | undefined,
   analysisDate: string | undefined,
   cond: PassConditions | undefined,
   byStatus: (s: string) => string[],
 ): string {
   if (!date || date === analysisDate) return '';
-  const d = new Date(`${date}T12:00:00`).toLocaleDateString('es-EC', { day: 'numeric', month: 'long' });
+  const d = new Date(`${date}T12:00:00`).toLocaleDateString(localeOf(lang), { day: 'numeric', month: 'long' });
+  const en = lang === 'en';
   if (cond && !cond.reliable) {
-    return `📅 **Pase del ${d}: radar no concluyente.** Llovieron ${cond.rain_7d_mm} mm en 7 días y el suelo está casi saturado (SMAP ${cond.smap_m3m3}). Con el suelo encharcado tanto tiempo hay **riesgo de hongos** y pudrición de raíz: revisa drenajes y evita regar.\n\n`;
+    return en
+      ? `📅 **${d} pass: radar inconclusive.** ${cond.rain_7d_mm} mm of rain fell in 7 days and the soil is nearly saturated (SMAP ${cond.smap_m3m3}). With waterlogged soil for this long there is a **risk of fungal disease** and root rot: check drainage and avoid irrigating.\n\n`
+      : `📅 **Pase del ${d}: radar no concluyente.** Llovieron ${cond.rain_7d_mm} mm en 7 días y el suelo está casi saturado (SMAP ${cond.smap_m3m3}). Con el suelo encharcado tanto tiempo hay **riesgo de hongos** y pudrición de raíz: revisa drenajes y evita regar.\n\n`;
   }
   const exc = byStatus('excessive');
   const def = byStatus('deficit');
-  const parts = [`📅 **Pase del ${d}:**`];
-  parts.push(exc.length ? `exceso de agua en ${exc.join(', ')} (riesgo de hongos y lavado de fertilizante).` : 'sin zonas con exceso de agua.');
-  if (def.length) parts.push(`Déficit en ${def.join(', ')}.`);
+  const parts = [en ? `📅 **${d} pass:**` : `📅 **Pase del ${d}:**`];
+  if (en) {
+    parts.push(exc.length ? `excess water in ${exc.join(', ')} (risk of fungal disease and fertilizer leaching).` : 'no zones with excess water.');
+    if (def.length) parts.push(`Deficit in ${def.join(', ')}.`);
+  } else {
+    parts.push(exc.length ? `exceso de agua en ${exc.join(', ')} (riesgo de hongos y lavado de fertilizante).` : 'sin zonas con exceso de agua.');
+    if (def.length) parts.push(`Déficit en ${def.join(', ')}.`);
+  }
   return `${parts.join(' ')}\n\n`;
 }
 
@@ -158,7 +170,9 @@ export function systemPrompt(ctx: CopilotContext): string {
     audience,
     'Reglas:',
     '- Usa SOLO los números del CONTEXTO. No inventes cifras ni hagas cálculos nuevos.',
-    '- Responde en el idioma del usuario (por defecto español), en lenguaje sencillo, como un mensaje de WhatsApp: máximo 120 palabras, viñetas cortas y negritas para las cifras clave.',
+    ctx.lang === 'en'
+      ? '- ALWAYS answer in ENGLISH, in plain language, like a WhatsApp message: max 120 words, short bullets and bold key figures.'
+      : '- Responde SIEMPRE en ESPAÑOL, en lenguaje sencillo, como un mensaje de WhatsApp: máximo 120 palabras, viñetas cortas y negritas para las cifras clave.',
     '- Si falta un dato, dilo y sugiere seleccionar una zona en el mapa.',
     '- FECHA: el usuario eligió en el mapa la pasada `selected_pass.date`. Responde sobre ESA fecha y menciónala. `sar_official_analysis` es el reporte oficial (1 sep vs 15 jul); úsalo solo si preguntan por el estado oficial o la cuota.',
     '- Si `selected_pass.radar_reliable` es false, di que el radar no detecta bien el agua esa fecha (lluvia fuerte y cultivo tupido) y básate en la lluvia y en SMAP.',
@@ -172,7 +186,8 @@ export function systemPrompt(ctx: CopilotContext): string {
   ].join('\n');
 }
 
-export function fallbackAnswer(ctx: CopilotContext, fb: Fallbacks, chipId?: string): string {
+export function fallbackAnswer(ctx: CopilotContext, all: Fallbacks, chipId?: string): string {
+  const fb = all[ctx.lang] ?? all.es;
   const group = ctx.role === 'farmer' ? { ...fb.community, ...fb.farmer } : fb.community;
   const note = String(ctx.templateValues.pass_note ?? '');
   if (chipId && group[chipId]) return note + fillTemplate(group[chipId], ctx.templateValues);

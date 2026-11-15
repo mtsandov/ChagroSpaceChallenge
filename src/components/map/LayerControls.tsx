@@ -1,5 +1,11 @@
 import { useState } from 'react';
 import { Layers } from 'lucide-react';
+import { useI18n } from '../../i18n';
+
+const L = {
+  es: { layers: 'Capas', hide: 'ocultar', show: 'mostrar', water: 'Máscara de agua SAR', parcels: 'Parcelas', colorBy: 'Colorear parcelas por', status: 'Estado SAR', vigor: 'Vigor (NDVI)' },
+  en: { layers: 'Layers', hide: 'hide', show: 'show', water: 'SAR water mask', parcels: 'Parcels', colorBy: 'Color parcels by', status: 'SAR status', vigor: 'Vigor (NDVI)' },
+};
 
 export interface LayerState {
   waterMask: boolean;
@@ -14,6 +20,8 @@ interface Props {
 
 export default function LayerControls({ value, onChange }: Props) {
   const [open, setOpen] = useState(() => typeof window === 'undefined' || window.matchMedia('(min-width: 640px)').matches);
+  const { lang } = useI18n();
+  const s = L[lang];
   const set = <K extends keyof LayerState>(k: K, v: LayerState[K]) => onChange({ ...value, [k]: v });
 
   return (
@@ -25,17 +33,17 @@ export default function LayerControls({ value, onChange }: Props) {
           aria-expanded={open}
         >
           <span className="flex items-center gap-2">
-            <Layers size={16} /> Capas
+            <Layers size={16} /> {s.layers}
           </span>
-          <span className="text-xs text-slate-400">{open ? 'ocultar' : 'mostrar'}</span>
+          <span className="text-xs text-slate-400">{open ? s.hide : s.show}</span>
         </button>
         {open && (
           <div className="space-y-2 border-t border-slate-100 px-3 py-3">
-            <Toggle label="Máscara de agua SAR" checked={value.waterMask} onChange={(v) => set('waterMask', v)} />
-            <Toggle label="Parcelas" checked={value.parcels} onChange={(v) => set('parcels', v)} />
+            <Toggle label={s.water} checked={value.waterMask} onChange={(v) => set('waterMask', v)} />
+            <Toggle label={s.parcels} checked={value.parcels} onChange={(v) => set('parcels', v)} />
 
             <div className="pt-1">
-              <div className="label">Colorear parcelas por</div>
+              <div className="label">{s.colorBy}</div>
               <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-100 p-0.5 text-xs">
                 {(['status', 'vigor'] as const).map((k) => (
                   <button
@@ -43,7 +51,7 @@ export default function LayerControls({ value, onChange }: Props) {
                     className={`rounded-md px-2 py-1 ${value.colorBy === k ? 'bg-white font-semibold shadow' : 'text-slate-500'}`}
                     onClick={() => onChange({ ...value, colorBy: k, waterMask: k === 'status' })}
                   >
-                    {k === 'status' ? 'Estado SAR' : 'Vigor (NDVI)'}
+                    {k === 'status' ? s.status : s.vigor}
                   </button>
                 ))}
               </div>

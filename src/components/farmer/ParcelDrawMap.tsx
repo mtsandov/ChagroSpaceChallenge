@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { CircleMarker, MapContainer, Polygon, Polyline, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import { Eraser, Undo2 } from 'lucide-react';
+import { useI18n } from '../../i18n';
 
 type LatLng = [number, number];
 
@@ -43,6 +44,8 @@ interface Props {
 
 export default function ParcelDrawMap({ center, points, onChange }: Props) {
   const area = polygonAreaHa(points);
+  const { lang } = useI18n();
+  const en = lang === 'en';
   return (
     <div>
       <div className="relative h-72 overflow-hidden rounded-lg border border-slate-200">
@@ -64,14 +67,18 @@ export default function ParcelDrawMap({ center, points, onChange }: Props) {
           ))}
         </MapContainer>
         <div className="pointer-events-none absolute left-2 top-2 z-[500] rounded-md bg-slate-900/75 px-2 py-1 text-[11px] text-white">
-          {points.length < 3 ? `Haz clic en cada esquina de la parcela (${points.length}/3 mínimo)` : `${points.length} puntos · ${area.toFixed(2)} ha`}
+          {points.length < 3
+            ? en
+              ? `Click each corner of the parcel (${points.length}/3 minimum)`
+              : `Haz clic en cada esquina de la parcela (${points.length}/3 mínimo)`
+            : `${points.length} ${en ? 'points' : 'puntos'} · ${area.toFixed(2)} ha`}
         </div>
         <div className="absolute right-2 top-2 z-[500] flex gap-1">
           <button type="button" className="btn-secondary px-2 py-1 text-xs" disabled={points.length === 0} onClick={() => onChange(points.slice(0, -1))}>
-            <Undo2 size={13} /> Deshacer
+            <Undo2 size={13} /> {en ? 'Undo' : 'Deshacer'}
           </button>
           <button type="button" className="btn-secondary px-2 py-1 text-xs" disabled={points.length === 0} onClick={() => onChange([])}>
-            <Eraser size={13} /> Borrar
+            <Eraser size={13} /> {en ? 'Clear' : 'Borrar'}
           </button>
         </div>
       </div>
