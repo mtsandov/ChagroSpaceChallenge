@@ -70,7 +70,7 @@ Los rasters (`*.tif`, `*.h5`, `*.nc`) **no se versionan**. Cada quien los genera
 | `nisar/gcov/delta_{HHHH,HVHV}_db.tif` | Actual − base | ΔdB |
 | `nisar/sme2/soil_moisture_<fecha>.tif` | Humedad de suelo NISAR | m³/m³, ~200 m |
 | `nisar/manifest.json` | Gránulos usados y humedad media por fecha | — |
-| `parcelas/mapbiomas_agro.geojson` | Unidades agrícolas (clases 21 y 74) cortadas con una grilla de 1 km | EPSG:4326 |
+| `parcelas/mapbiomas_agro.geojson` | Unidades agrícolas (clases 21 y 74) cortadas con una grilla de 500 m | EPSG:4326 |
 
 ### Cómo leer el radar
 - **HH** responde al agua: el agua libre o la lámina de riego se ve muy oscura (< −18 dB). **HV** responde a la vegetación.
@@ -92,8 +92,8 @@ Las parcelas usan IDs genéricos (`AGRO_DAULE_0001`): **no publiques nombres rea
 
 | Cuenca | Agua superficial | Parcelas | Agua en parcelas |
 |---|---|---|---|
-| Daule | 851 → 966 ha (+14 %) | 574 (46 532 ha) | 644 ha |
-| Santa Elena | 101 → 131 ha (+29 %) | 226 (9 083 ha) | 20 ha |
+| Daule | 851 → 966 ha (+14 %) | 2 015 (46 400 ha) | 643 ha |
+| Santa Elena | 101 → 131 ha (+29 %) | 508 (8 614 ha) | 19 ha |
 
 ## Formato de salida (contrato con la app)
 

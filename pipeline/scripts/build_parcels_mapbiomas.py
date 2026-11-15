@@ -23,7 +23,7 @@ from config import BASIN_ID, BBOX, DATA
 
 CLASSES = {21: "Mosaico de agricultura y/o pastos", 74: "Banano"}
 MIN_PIXELS = 20
-GRID_M = 1000
+GRID_M = 500
 MIN_HA = 5
 SIMPLIFY_M = 15
 UTM = "EPSG:32717"
