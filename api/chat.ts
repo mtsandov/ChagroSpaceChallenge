@@ -3,7 +3,7 @@ import { buildContext, fallbackAnswer, systemPrompt } from './_lib/copilot';
 import { methodNotAllowed, type ApiRequest, type ApiResponse } from './_lib/http';
 import type { Selection } from '../src/types';
 
-const GEMINI_TIMEOUT_MS = 12_000;
+const GEMINI_TIMEOUT_MS = 20_000;
 
 interface ChatBody {
   messages?: { role: 'user' | 'assistant'; content: string }[];
@@ -49,7 +49,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 }
 
 async function callGemini(apiKey: string, system: string, messages: { role: string; content: string }[]) {
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  const model = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
   try {
