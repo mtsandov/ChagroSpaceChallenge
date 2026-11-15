@@ -10,17 +10,29 @@ export default function KpiStrip({ summary }: { summary: BasinSummary }) {
     lluvia: d.rainfall,
   }));
   const station = summary.lowestStation;
+  const win = summary.sarWindow;
+  const dryWindow = win !== null && win.rain < 10;
   const overQuota = summary.quotaPct > 0;
 
   return (
     <div className="grid gap-3 border-t border-slate-200 bg-white p-3 md:grid-cols-[repeat(3,minmax(0,1fr))_minmax(0,1.6fr)]">
-      <Kpi
-        icon={<CloudRain size={18} />}
-        title="Lluvia NASA POWER · 15 días"
-        value={`${summary.rain15.toFixed(1)} mm`}
-        hint={summary.rain15 < 5 ? 'Estación seca confirmada' : 'Hubo lluvias recientes'}
-        tone={summary.rain15 < 5 ? 'warn' : 'ok'}
-      />
+      {win ? (
+        <Kpi
+          icon={<CloudRain size={18} />}
+          title={`Lluvia entre pases de radar · ${shortDate(win.from)} – ${shortDate(win.to)}`}
+          value={`${win.rain.toFixed(1)} mm`}
+          hint={dryWindow ? 'Época seca: el agua nueva no viene de la lluvia' : 'Hubo lluvia entre las escenas'}
+          tone={dryWindow ? 'warn' : 'ok'}
+        />
+      ) : (
+        <Kpi
+          icon={<CloudRain size={18} />}
+          title="Lluvia NASA POWER · 15 días"
+          value={`${summary.rain15.toFixed(1)} mm`}
+          hint={summary.rain15 < 5 ? 'Estación seca confirmada' : 'Hubo lluvias recientes'}
+          tone={summary.rain15 < 5 ? 'warn' : 'ok'}
+        />
+      )}
       <Kpi
         icon={<Droplets size={18} />}
         title="Área con agua detectada (SAR)"
@@ -46,8 +58,8 @@ export default function KpiStrip({ summary }: { summary: BasinSummary }) {
               <YAxis tick={{ fontSize: 9 }} />
               <Tooltip contentStyle={{ fontSize: 11 }} />
               <Legend wrapperStyle={{ fontSize: 10 }} iconSize={8} />
-              <Bar dataKey="et0" name="ET₀" fill="#f97316" radius={[2, 2, 0, 0]} />
-              <Bar dataKey="lluvia" name="Lluvia" fill="#0ea5e9" radius={[2, 2, 0, 0]} />
+              <Bar dataKey="et0" name="ET₀" fill="#f97316" radius={[2, 2, 0, 0]} isAnimationActive={false} />
+              <Bar dataKey="lluvia" name="Lluvia" fill="#0ea5e9" radius={[2, 2, 0, 0]} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -55,6 +67,9 @@ export default function KpiStrip({ summary }: { summary: BasinSummary }) {
     </div>
   );
 }
+
+const shortDate = (iso: string) =>
+  new Date(`${iso}T12:00:00`).toLocaleDateString('es-EC', { day: 'numeric', month: 'short' });
 
 const TONES = {
   ok: 'bg-emerald-50 text-emerald-700',

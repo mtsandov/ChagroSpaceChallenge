@@ -1,9 +1,10 @@
 /**
  * Acceso a datos del backend.
  *
- * Hoy lee los JSON SIMULADOS de /public/data. Cuando el pipeline NASA esté listo,
- * reemplazar estas funciones por consultas a Supabase o a NASA POWER sin cambiar
- * su firma (las consumen chat, weather y recommend).
+ * Lee los JSON de /public/data: clima y capas SAR vienen del pipeline NASA
+ * (pipeline/); estaciones y agricultor demo siguen simulados. Para pasar a
+ * Supabase, reemplazar estas funciones sin cambiar su firma (las consumen chat,
+ * weather y recommend).
  */
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';

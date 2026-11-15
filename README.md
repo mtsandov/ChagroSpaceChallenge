@@ -1,86 +1,56 @@
 # ChAgro — SAR Water Transparency Monitor
 
-Plataforma geoespacial y copiloto conversacional para auditar de forma transparente el agua agrícola
-y recomendar riego en época seca con datos de la NASA.
+Visor geoespacial y copiloto para auditar el agua agrícola y recomendar riego en época seca con datos NASA.
 **NASA Space Apps Challenge Guayaquil 2026 · Dancing with the SARs.**
-
-> ⚠️ **Prototipo:** los datos NASA son **simulados** (`public/data`) con el formato final.
-> La integración real va en `pipeline/` (ver `docs/DATA_CONTRACT.md`).
 
 ## Inicio rápido
 
-Requisito: Node 20 o superior.
+Requiere Node 20 o superior.
 
 ```bash
 npm install
-```
-
-```bash
 npm run dev
 ```
 
-Abre http://localhost:5173. Sin variables de entorno la app corre en **modo demo**:
-- La autenticación se simula en el navegador. En `/login` hay botones de "Agricultor demo" y "Comunidad demo".
-- El copiloto responde con `public/data/fallback_copilot.json`.
+Abre http://localhost:5173. Sin variables de entorno, la app corre en **modo demo**: el login se simula y el copiloto responde con `public/data/fallback_copilot.json`. Las funciones `/api/*` corren dentro de `npm run dev`.
 
-Las funciones `/api/*` corren dentro de `npm run dev` gracias a `dev-api-plugin.ts`, así que no hace falta `vercel dev`.
-
-### Con Supabase y Gemini
-
+Para usar Supabase y Gemini:
 1. Copia `.env.example` a `.env.local` y completa las claves.
-2. En tu proyecto de Supabase, ejecuta `supabase/migrations/*.sql` y luego `supabase/seed.sql`, ya sea desde el SQL Editor o con `supabase db push`.
-3. Reinicia `npm run dev`.
-
-## Scripts
+2. Ejecuta `supabase/migrations/*.sql` y luego `supabase/seed.sql`.
 
 | Comando | Qué hace |
 |---|---|
-| `npm run dev` | Servidor de desarrollo (frontend + `/api`) |
+| `npm run dev` | Frontend + `/api` en local |
 | `npm run build` | Typecheck + build de producción |
-| `npm test` | Tests del motor agronómico (Vitest) |
-| `node scripts/generate-mock-data.mjs` | Regenera los JSON simulados |
+| `npm test` | Tests del motor agronómico |
 
-## Arquitectura
+## Datos
+
+| Archivo en `public/data/` | Origen |
+|---|---|
+| `weather_daily.json` | **NASA**: POWER (histórico) + GEOS-FP (pronóstico) |
+| `sar_irrigation_anomalies.geojson`, `sar_water_mask_*.geojson` | **NASA**: NISAR, SMAP, VIIRS + parcelas de MapBiomas |
+| `basins.json` | Configuración: cuencas `daule` y `santa-elena` |
+| `virtual_stations.json` | Vacío: no hay un dato real de nivel de esteros |
+| `farmer_demo.json` | Simulado (modo agricultor demo) |
+| `fallback_copilot.json` | Respuestas sin conexión |
+
+Los datos NASA se generan con [`pipeline/`](pipeline/README.md), que también describe el formato de cada archivo.
+
+## Estructura
 
 ```
-src/
-  pages/          Viewer (público), Login, FarmerDashboard
-  components/     map/ (Leaflet + comparador SAR), kpi/, copilot/, farmer/, layout/
-  lib/agro/       Motor puro: Penman-Monteith FAO-56, Kc, riego, balance hídrico
-  lib/summary.ts  KPIs de cuenca y recomendación por parcela (compartido con /api)
-  context/        AuthContext (Supabase o demo)
-api/              Funciones serverless (Vercel): chat, recommend, weather
-supabase/         Migraciones SQL (PostGIS + RLS) y seed
-public/data/      Datos simulados con el formato del pipeline NASA
-docs/             Contrato de datos
+src/            Frontend React: pages, components (mapa, KPIs, copiloto), lib/agro (FAO-56, riego)
+api/            Funciones serverless (Vercel): chat (Gemini), recommend, weather
+pipeline/       Descarga y procesamiento de datos NASA (Python)
+public/data/    Datos que lee la app
+supabase/       Migraciones SQL (PostGIS + RLS) y seed
+scripts/        Plugin para correr /api en desarrollo
+tests/          Tests del motor agronómico (Vitest)
 ```
 
-### Roles
-
-| | Público | Agricultor |
-|---|---|---|
-| Visor, KPIs, estaciones, SAR por parcela | ✅ | ✅ |
-| Copiloto con contexto de cuenca | ✅ | ✅ |
-| Registrar parcelas y sistema de riego | ❌ | ✅ |
-| Recomendaciones de riego y copiloto con datos propios | ❌ | ✅ |
-
-El rol se resuelve **en el servidor** desde el JWT de Supabase (o el token demo), nunca desde el body.
-
-### Motor de recomendación
-
-Está inspirado en el componente Irrigación Inteligente de ShrimpDashboard:
-
-1. ET₀ diaria con Penman-Monteith FAO-56 a partir de NASA POWER (`T2MDEW` para ea, `PS` en kPa).
-2. ETc = Σ ET₀ × Kc (según la etapa del cultivo desde la siembra).
-3. Necesidad neta = ETc + percolación − lluvia efectiva. Lámina bruta = neta ÷ eficiencia.
-4. Volumen **por planta** (goteo: π·r² × lámina × nº de plantas) o **por área** (inundación o surcos: mm × ha × 10).
-5. Balance de humedad: el agotamiento actual se estima con la humedad SAR y se compara con RAW = p·TAW para saber cuándo regar.
+El rol del usuario (público o agricultor) se resuelve **en el servidor** desde el token, nunca desde el body.
 
 ## Despliegue
 
-Vercel (frontend + `/api`) y Supabase (BD, Auth y Storage). `vercel.json` ya incluye `public/data` en las funciones.
-Hay que configurar en Vercel: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY`.
-
-## Contribuir
-
-Lee [CONTRIBUTING.md](CONTRIBUTING.md) y registra tus cambios en [CHANGELOG.md](CHANGELOG.md).
+Vercel (frontend + `/api`) y Supabase. Variables: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY`.
