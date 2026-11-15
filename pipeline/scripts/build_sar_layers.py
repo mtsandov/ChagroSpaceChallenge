@@ -13,7 +13,7 @@ Las parcelas pueden venir en .shp, .gpkg, .geojson o .zip (shapefile comprimido)
 Si el archivo tiene la columna `cbn1` (capa MAATE), se filtra a TIERRA AGROPECUARIA.
 
 Los datos de otras cuencas (p. ej. santa-elena) que ya estén en los GeoJSON se conservan.
-Formato de salida: docs/DATA_CONTRACT.md
+Formato de salida: pipeline/README.md (sección "Formato de salida")
 """
 
 from __future__ import annotations

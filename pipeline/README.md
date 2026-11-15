@@ -1,7 +1,7 @@
 # Pipeline de datos NASA
 
 Scripts de Python que descargan datos NASA, los recortan a cada cuenca y generan los archivos de `public/data/`.
-Formato de salida: [`docs/DATA_CONTRACT.md`](../docs/DATA_CONTRACT.md).
+El formato que espera la app está en [Formato de salida](#formato-de-salida-contrato-con-la-app).
 
 ## Cuencas
 
@@ -94,6 +94,27 @@ Las parcelas usan IDs genéricos (`AGRO_DAULE_0001`): **no publiques nombres rea
 |---|---|---|---|
 | Daule | 851 → 966 ha (+14 %) | 574 (46 532 ha) | 644 ha |
 | Santa Elena | 101 → 131 ha (+29 %) | 226 (9 083 ha) | 20 ha |
+
+## Formato de salida (contrato con la app)
+
+La app lee `public/data/` y **no cambia** si se respetan los nombres de archivo y de campo.
+- Los tipos de referencia están en `src/types/index.ts`.
+- Cada script reemplaza solo las features o llaves de su cuenca (`basin_id`) y conserva las demás.
+- Si los datos pasan a Supabase (tablas en `supabase/migrations/`), solo cambian `api/_lib/data.ts` y `src/lib/api/useViewerData.ts`.
+
+| Archivo | Lo genera | Campos |
+|---|---|---|
+| `weather_daily.json` | `build_weather_daily.py` | Objeto con una llave por `basin_id` → `source`, `community`, `location {lat, lng, elevation_m}`, `daily[]` y `forecast {source, daily[]}` |
+| ↳ `daily[]` | POWER | `date`, `T2M_MAX`, `T2M_MIN` (°C), `T2MDEW` (°C, para eₐ), `RH2M` (%), `WS2M` (m/s a 2 m), `ALLSKY_SFC_SW_DWN` (MJ/m²/día), `PS` (**kPa**), `PRECTOTCORR` (mm/día). `-999` = faltante. La ET₀ **no** se guarda: la calcula `src/lib/agro/penmanMonteith.ts` |
+| ↳ `forecast.daily[]` | GEOS-FP | `date`, `temperature_2m_max`, `temperature_2m_min`, `precipitation_sum`, `precipitation_probability_max` (hoy `null`), `et0_fao_evapotranspiration` |
+| `sar_irrigation_anomalies.geojson` | `build_sar_layers.py --parcels` | `Polygon` en EPSG:4326 → `parcel_id`, `name`, `basin_id`, `zone_type` (`commercial_farm` \| `smallholder` \| `community`), `crop`, `area_hectares`, `irrigated_area_pct`, `irrigated_area_ha`, `baseline_water_pct`, `sar_backscatter_db`, `sar_delta_db` (dB), `soil_moisture_m3m3`, `ndvi` (0–1), `status` (`excessive` \| `normal` \| `deficit`), `status_label`, `observation_date`, `baseline_date`, `sensor` |
+| `sar_water_mask_{baseline,current}.geojson` | `build_sar_layers.py` | Polígonos de agua → `basin_id`, `scene` (`baseline` \| `current`), `water_class` (`irrigation` \| `residual` \| `river`) |
+| `basins.json` | A mano | `id`, `name`, `short_name`, `description`, `center [lat, lng]`, `zoom`, `sustainable_quota_ha` (cuota para el KPI "+X % sobre la cuota") |
+| `virtual_stations.json` | A mano (simulado) | `station_id`, `name`, `basin_id`, `lat`, `lng`, `canal_level_pct`, `flow_trend` (`increasing` \| `stable` \| `decreasing`), `alert_level` (`normal` \| `warning` \| `critical_low`), `last_updated`, `history [{date, level_pct}]` |
+| `farmer_demo.json` | A mano (simulado) | Parcelas del agricultor demo. En producción viven en las tablas `parcels` e `irrigation_systems` de Supabase |
+| `fallback_copilot.json` | A mano | Respuestas sin conexión por chip, con `{{variables}}` definidas en `api/_lib/copilot.ts` (`templateValues`) |
+
+Para mostrar los rasters en el mapa en lugar de polígonos, se pueden servir como tiles XYZ (`gdal2tiles`) en `public/tiles/<escena>/{z}/{x}/{y}.png` y agregar un `<TileLayer>` en los panes `sar-baseline` y `sar-current` de `SarMap.tsx`.
 
 ## Atribución
 > Datos: NASA POWER (LaRC), NASA GMAO GEOS-FP, NASA VIIRS VNP13A1 (LP DAAC), NASA SMAP (NSIDC DAAC), NASA-ISRO NISAR (ASF DAAC). Parcelas: MapBiomas Ecuador, colección 4.
