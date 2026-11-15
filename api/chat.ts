@@ -34,6 +34,16 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     farmerParcelId: body.farmer_parcel_id,
   });
 
+  const groqKey = process.env.GROQ_API_KEY;
+  if (groqKey) {
+    try {
+      const reply = await callGroq(groqKey, systemPrompt(ctx), messages);
+      if (reply) return res.status(200).json({ reply, source: 'gemini', role: user.role });
+    } catch (err) {
+      console.warn('[chat] Groq falló:', (err as Error).message);
+    }
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (apiKey) {
     try {
@@ -66,6 +76,29 @@ async function callGemini(apiKey: string, system: string, messages: { role: stri
     if (!r.ok) throw new Error(`Gemini HTTP ${r.status}`);
     const json = (await r.json()) as any;
     return (json.candidates?.[0]?.content?.parts ?? []).map((p: any) => p.text ?? '').join('').trim();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function callGroq(apiKey: string, system: string, messages: { role: string; content: string }[]) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
+  try {
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      signal: controller.signal,
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
+        temperature: 0.3,
+        max_tokens: 800,
+        messages: [{ role: 'system', content: system }, ...messages.map((m) => ({ role: m.role, content: m.content }))],
+      }),
+    });
+    if (!r.ok) throw new Error(`Groq HTTP ${r.status}`);
+    const json = (await r.json()) as any;
+    return String(json.choices?.[0]?.message?.content ?? '').trim();
   } finally {
     clearTimeout(timer);
   }
