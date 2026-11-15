@@ -12,7 +12,7 @@ export interface ViewerData {
 }
 
 /**
- * Carga los datos del visor desde /public/data (JSON simulados por ahora).
+ * Carga los datos del visor desde /public/data (NASA reales + estaciones y agricultor demo simulados).
  * TODO(nasa/supabase): cambiar por consultas a Supabase sin cambiar la forma de `ViewerData`.
  */
 export function useViewerData() {

@@ -48,8 +48,6 @@ __pycache__/
 .venv/
 venv/
 .ipynb_checkpoints/
-pipeline/raw/
-pipeline/out/
 pipeline/.venv/
 
 # --- Datos geoespaciales pesados (no versionar) ---

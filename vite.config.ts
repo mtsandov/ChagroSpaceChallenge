@@ -2,7 +2,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
-import { devApiPlugin } from './dev-api-plugin';
+import { devApiPlugin } from './scripts/dev-api-plugin';
 
 export default defineConfig({
   plugins: [react(), devApiPlugin()],
