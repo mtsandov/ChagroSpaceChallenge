@@ -34,7 +34,7 @@ Para usar Supabase y Gemini:
 | `virtual_stations.json`, `farmer_demo.json` | Simulados |
 | `fallback_copilot.json` | Respuestas sin conexión |
 
-Los datos NASA se generan con [`pipeline/`](pipeline/README.md). El formato está en [`docs/DATA_CONTRACT.md`](docs/DATA_CONTRACT.md).
+Los datos NASA se generan con [`pipeline/`](pipeline/README.md), que también describe el formato de cada archivo.
 
 ## Estructura
 
@@ -46,7 +46,6 @@ public/data/    Datos que lee la app
 supabase/       Migraciones SQL (PostGIS + RLS) y seed
 scripts/        Plugin para correr /api en desarrollo
 tests/          Tests del motor agronómico (Vitest)
-docs/           Contrato de datos, plan y decisiones pendientes
 ```
 
 El rol del usuario (público o agricultor) se resuelve **en el servidor** desde el token, nunca desde el body.
