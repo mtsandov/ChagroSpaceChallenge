@@ -1,9 +1,10 @@
+import Anthropic from '@anthropic-ai/sdk';
 import { resolveUser } from './_lib/auth';
 import { buildContext, fallbackAnswer, systemPrompt } from './_lib/copilot';
 import { methodNotAllowed, type ApiRequest, type ApiResponse } from './_lib/http';
 import type { Selection } from '../src/types';
 
-const GEMINI_TIMEOUT_MS = 20_000;
+const CLAUDE_TIMEOUT_MS = 20_000;
 
 interface ChatBody {
   messages?: { role: 'user' | 'assistant'; content: string }[];
@@ -15,7 +16,7 @@ interface ChatBody {
 
 /**
  * POST /api/chat
- * Arma el contexto según el rol (del token), llama a Gemini y, si no hay key
+ * Arma el contexto según el rol (del token), llama a Claude y, si no hay key
  * o falla o tarda demasiado, responde con fallback_copilot.json.
  */
 export default async function handler(req: ApiRequest, res: ApiResponse) {
@@ -34,13 +35,12 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     farmerParcelId: body.farmer_parcel_id,
   });
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (apiKey) {
+  if (process.env.ANTHROPIC_API_KEY) {
     try {
-      const reply = await callGemini(apiKey, systemPrompt(ctx), messages);
-      if (reply) return res.status(200).json({ reply, source: 'gemini', role: user.role });
+      const reply = await callClaude(systemPrompt(ctx), messages);
+      if (reply) return res.status(200).json({ reply, source: 'claude', role: user.role });
     } catch (err) {
-      console.warn('[chat] Gemini falló, usando fallback:', (err as Error).message);
+      console.warn('[chat] Claude falló, usando fallback:', (err as Error).message);
     }
   }
 
@@ -48,25 +48,24 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   res.status(200).json({ reply, source: 'fallback', role: user.role });
 }
 
-async function callGemini(apiKey: string, system: string, messages: { role: string; content: string }[]) {
-  const model = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
-  try {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-      method: 'POST',
-      signal: controller.signal,
-      headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: system }] },
-        contents: messages.map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
-        generationConfig: { temperature: 0.3, maxOutputTokens: 600 },
-      }),
-    });
-    if (!r.ok) throw new Error(`Gemini HTTP ${r.status}`);
-    const json = (await r.json()) as any;
-    return (json.candidates?.[0]?.content?.parts ?? []).map((p: any) => p.text ?? '').join('').trim();
-  } finally {
-    clearTimeout(timer);
-  }
+async function callClaude(system: string, messages: { role: 'user' | 'assistant'; content: string }[]) {
+  const client = new Anthropic({ timeout: CLAUDE_TIMEOUT_MS, maxRetries: 1 });
+  const history: Anthropic.Beta.BetaMessageParam[] = messages.map((m) => ({ role: m.role, content: m.content }));
+  while (history.length > 0 && history[0].role !== 'user') history.shift();
+
+  const response = await client.beta.messages.create({
+    model: process.env.CLAUDE_MODEL || 'claude-opus-5-5',
+    max_tokens: 16000,
+    betas: ['server-side-fallback-2026-07-01'],
+    fallbacks: 'default',
+    output_config: { effort: 'low' },
+    system,
+    messages: history,
+  });
+  if (response.stop_reason === 'refusal') return '';
+  return response.content
+    .filter((b): b is Anthropic.Beta.BetaTextBlock => b.type === 'text')
+    .map((b) => b.text)
+    .join('')
+    .trim();
 }

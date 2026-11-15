@@ -14,7 +14,7 @@ npm run dev
 
 Abre http://localhost:5173. Sin variables de entorno, la app corre en **modo demo**: el login se simula y el copiloto responde con `public/data/fallback_copilot.json`. Las funciones `/api/*` corren dentro de `npm run dev`.
 
-Para usar Supabase y Gemini:
+Para usar Supabase y Claude:
 1. Copia `.env.example` a `.env.local` y completa las claves.
 2. Ejecuta `supabase/migrations/*.sql` y luego `supabase/seed.sql`.
 
@@ -41,7 +41,7 @@ Los datos NASA se generan con [`pipeline/`](pipeline/README.md), que también de
 
 ```
 src/            Frontend React: pages, components (mapa, KPIs, copiloto), lib/agro (FAO-56, riego)
-api/            Funciones serverless (Vercel): chat (Gemini), recommend, weather
+api/            Funciones serverless (Vercel): chat (Claude), recommend, weather
 pipeline/       Descarga y procesamiento de datos NASA (Python)
 public/data/    Datos que lee la app
 supabase/       Migraciones SQL (PostGIS + RLS) y seed
@@ -53,4 +53,4 @@ El rol del usuario (público o agricultor) se resuelve **en el servidor** desde 
 
 ## Despliegue
 
-Vercel (frontend + `/api`) y Supabase. Variables: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY`.
+Vercel (frontend + `/api`) y Supabase. Variables: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`.

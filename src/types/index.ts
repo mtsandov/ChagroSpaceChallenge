@@ -150,7 +150,7 @@ export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
-  source?: 'gemini' | 'fallback';
+  source?: 'claude' | 'fallback';
 }
 
 /** Lo que el mapa tiene seleccionado; se usa como contexto del copiloto. */
