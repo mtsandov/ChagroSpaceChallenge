@@ -34,7 +34,7 @@ from shapely.geometry import box, shape
 from config import BASIN_ID, BBOX, DATA, PUBLIC_DATA
 
 # ---------------------------------------------------------------------------
-# Parámetros ajustables (ver data/nisar/gcov/README.md)
+# Parámetros ajustables (ver pipeline/README.md)
 # ---------------------------------------------------------------------------
 UTM = "EPSG:32717"
 MULTILOOK = 5  # 10 m × 5 = 50 m: reduce el speckle antes de umbralizar
@@ -42,7 +42,7 @@ WATER_HH_DB = -18.0  # HH < -18 dB → agua libre o lámina de riego
 MIN_WATER_HA = 1.0  # manchas de agua más chicas se descartan
 MIN_PARCEL_HA = 5.0  # parcelas más chicas se descartan
 COMMERCIAL_HA = 50.0  # ≥ 50 ha → finca comercial; si no, pequeño productor
-EXCESSIVE_PCT = 30.0  # ≥ 30 % de la parcela con agua en época seca → exceso
+EXCESSIVE_INCREASE_PP = 10.0
 DEFICIT_PCT = 5.0  # < 5 % con agua...
 DEFICIT_SOIL = 0.22  # ...y humedad SME2 < 0.22 m³/m³ o NDVI < 0.35 → déficit
 DEFICIT_NDVI = 0.35
@@ -276,7 +276,8 @@ def main() -> None:
 
     def status(i: int) -> str:
         w = water_act_pct[i]
-        if np.isfinite(w) and w >= EXCESSIVE_PCT:
+        increase = w - (water_base_pct[i] if np.isfinite(water_base_pct[i]) else 0)
+        if np.isfinite(increase) and increase >= EXCESSIVE_INCREASE_PP:
             return "excessive"
         dry = (np.isfinite(soil[i]) and soil[i] < DEFICIT_SOIL) or (np.isfinite(ndvi[i]) and ndvi[i] < DEFICIT_NDVI)
         if (not np.isfinite(w) or w < DEFICIT_PCT) and dry:

@@ -80,7 +80,7 @@ export interface ForecastDaily {
   temperature_2m_max: number;
   temperature_2m_min: number;
   precipitation_sum: number;
-  precipitation_probability_max: number;
+  precipitation_probability_max: number | null;
   et0_fao_evapotranspiration: number;
 }
 
