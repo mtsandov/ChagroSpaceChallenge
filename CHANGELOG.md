@@ -17,11 +17,17 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ### Agregado
 
+- `pipeline/scripts/build_sar_layers.py`: convierte NISAR GCOV, SME2 y VIIRS NDVI en máscaras de agua y en métricas SAR por parcela (pipeline)
+
 ### Cambiado
+
+- `pipeline/requirements.txt` agrega `geopandas`, `shapely` y `pyogrio`; guía del pipeline en `pipeline/README.md` (pipeline)
 
 ### Corregido
 
 ### Datos
+
+- Máscaras de agua de Daule reales (NISAR GCOV HH a 50 m, 15 jul → 1 sep 2026: 850 → 966 ha). Las parcelas y las estaciones siguen simuladas hasta que llegue la capa MAATE (datos)
 
 ## [0.1.0] - 2026-11-14
 
