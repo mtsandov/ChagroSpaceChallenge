@@ -16,7 +16,7 @@ interface Props {
 
 interface ChatResponse {
   reply: string;
-  source: 'claude' | 'fallback';
+  source: 'gemini' | 'fallback';
 }
 
 const uid = () => Math.random().toString(36).slice(2);

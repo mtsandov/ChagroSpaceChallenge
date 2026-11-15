@@ -10,7 +10,7 @@ export interface CopilotContext {
 }
 
 /**
- * Construye el contexto que se inyecta a Claude. El rol viene del token (ver auth.ts):
+ * Construye el contexto que se inyecta a Gemini. El rol viene del token (ver auth.ts):
  * el contexto público NUNCA incluye datos privados del sistema de riego.
  */
 export async function buildContext(opts: {
