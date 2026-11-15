@@ -13,11 +13,11 @@ interface Props {
 }
 
 export default function LayerControls({ value, onChange }: Props) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(() => typeof window === 'undefined' || window.matchMedia('(min-width: 640px)').matches);
   const set = <K extends keyof LayerState>(k: K, v: LayerState[K]) => onChange({ ...value, [k]: v });
 
   return (
-    <div className="absolute right-3 top-3 z-[500] w-60 text-sm">
+    <div className="absolute right-3 top-3 z-[500] w-52 text-sm sm:w-60">
       <div className="card overflow-hidden">
         <button
           className="flex w-full items-center justify-between px-3 py-2 font-semibold text-slate-700"

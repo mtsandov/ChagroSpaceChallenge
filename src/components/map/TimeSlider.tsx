@@ -15,7 +15,7 @@ interface Props {
 export default function TimeSlider({ dates, index, analysisDate, unreliable = [], onChange }: Props) {
   if (dates.length < 2) return null;
   return (
-    <div className="card absolute bottom-6 left-1/2 z-[500] w-[min(420px,calc(100%-24px))] -translate-x-1/2 px-4 py-2 sm:left-auto sm:right-3 sm:translate-x-0">
+    <div className="card absolute bottom-11 left-1/2 z-[500] w-[min(420px,calc(100%-24px))] -translate-x-1/2 px-4 py-2 sm:bottom-6 sm:left-auto sm:right-3 sm:translate-x-0">
       <div className="mb-1 flex items-center justify-between text-[11px]">
         <span className="flex items-center gap-1 font-semibold text-slate-600">
           <CalendarDays size={13} /> Pase del radar NISAR
