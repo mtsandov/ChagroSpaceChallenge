@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Database, LogIn, LogOut } from 'lucide-react';
+import { Database, LogIn, LogOut, Sprout } from 'lucide-react';
 import type { Basin } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import DataSourcesModal from './DataSourcesModal';
@@ -19,10 +19,10 @@ export default function TopNav({ basins, basinId, onBasinChange }: Props) {
   const isFarmer = user?.role === 'farmer';
 
   return (
-    <header className="z-[1000] flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-slate-200 bg-white px-4 py-2 shadow-sm">
-      <Link to="/" className="flex items-center gap-2">
+    <header className="z-[1000] flex items-center gap-2 border-b border-slate-200 bg-white px-3 py-2 shadow-sm sm:gap-4 sm:px-4">
+      <Link to="/" className="flex shrink-0 items-center gap-2">
         <img src={assetUrl('favicon.svg')} alt="" className="h-8 w-8" />
-        <div className="leading-tight">
+        <div className="hidden leading-tight min-[420px]:block">
           <div className="text-base font-bold text-brand-800">ChAgro</div>
           <div className="hidden text-[11px] text-slate-500 sm:block">SAR Water Transparency Monitor</div>
         </div>
@@ -31,7 +31,7 @@ export default function TopNav({ basins, basinId, onBasinChange }: Props) {
       {basins && onBasinChange && (
         <select
           aria-label="Cuenca piloto"
-          className="input max-w-[16rem] py-1.5"
+          className="input min-w-0 flex-1 py-1.5 sm:max-w-[16rem] sm:flex-none"
           value={basinId}
           onChange={(e) => onBasinChange(e.target.value)}
         >
@@ -43,16 +43,17 @@ export default function TopNav({ basins, basinId, onBasinChange }: Props) {
         </select>
       )}
 
-      <nav className="ml-auto flex items-center gap-1 text-sm">
-        <NavLink to="/" end className={({ isActive }) => `btn-ghost px-3 py-1.5 ${isActive ? 'text-brand-700' : ''}`}>
+      <nav className="ml-auto flex shrink-0 items-center gap-1 text-sm">
+        <NavLink to="/" end className={({ isActive }) => `btn-ghost hidden px-3 py-1.5 sm:inline-flex ${isActive ? 'text-brand-700' : ''}`}>
           Visor
         </NavLink>
         {isFarmer && (
-          <NavLink to="/farmer" className={({ isActive }) => `btn-ghost px-3 py-1.5 ${isActive ? 'text-brand-700' : ''}`}>
-            Mis parcelas
+          <NavLink to="/farmer" className={({ isActive }) => `btn-ghost px-2 py-1.5 sm:px-3 ${isActive ? 'text-brand-700' : ''}`} title="Mis parcelas">
+            <Sprout size={16} className="sm:hidden" />
+            <span className="hidden sm:inline">Mis parcelas</span>
           </NavLink>
         )}
-        <button className="btn-ghost px-3 py-1.5" onClick={() => setShowSources(true)} title="Fuentes de datos">
+        <button className="btn-ghost px-2 py-1.5 sm:px-3" onClick={() => setShowSources(true)} title="Fuentes de datos">
           <Database size={16} />
           <span className="hidden md:inline">Fuentes</span>
         </button>
@@ -62,7 +63,7 @@ export default function TopNav({ basins, basinId, onBasinChange }: Props) {
         </span>
 
         {user ? (
-          <div className="flex items-center gap-2 pl-2">
+          <div className="flex items-center gap-2 pl-1 sm:pl-2">
             <div className="hidden text-right leading-tight sm:block">
               <div className="text-xs font-semibold">{user.full_name}</div>
               <div className="text-[10px] text-slate-500">{user.role === 'farmer' ? 'Agricultor' : 'Comunidad'}</div>
@@ -79,8 +80,8 @@ export default function TopNav({ basins, basinId, onBasinChange }: Props) {
             </button>
           </div>
         ) : (
-          <Link to="/login" className="btn-primary px-3 py-1.5">
-            <LogIn size={16} /> Ingresar
+          <Link to="/login" className="btn-primary px-2.5 py-1.5 sm:px-3">
+            <LogIn size={16} /> <span className="hidden sm:inline">Ingresar</span>
           </Link>
         )}
       </nav>
