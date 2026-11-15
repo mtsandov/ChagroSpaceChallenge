@@ -1,7 +1,15 @@
 # Contrato de datos (pipeline NASA → app)
 
-La app lee estos archivos desde `public/data/`. Hoy son **simulados** (`node scripts/generate-mock-data.mjs`).
-El pipeline real tiene que producir **los mismos nombres de archivo y campos**: así la app no cambia.
+La app lee estos archivos desde `public/data/`. El pipeline (`pipeline/`) genera los marcados como **NASA**;
+los demás se editan a mano y deben mantener **los mismos nombres de archivo y campos**.
+
+| Archivo | Origen |
+|---|---|
+| `weather_daily.json` | NASA (POWER + GEOS-FP) |
+| `sar_irrigation_anomalies.geojson`, `sar_water_mask_*.geojson` | NASA (NISAR, VIIRS) + parcelas MapBiomas |
+| `basins.json` | Configuración manual |
+| `virtual_stations.json`, `farmer_demo.json` | Simulados |
+| `fallback_copilot.json` | Plantillas manuales |
 Los tipos TypeScript de referencia están en `src/types/index.ts`.
 
 Cuando los datos pasen a Supabase, las tablas equivalentes ya existen en
