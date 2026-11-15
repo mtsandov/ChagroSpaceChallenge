@@ -53,11 +53,3 @@ El rol del usuario (público o agricultor) se resuelve **en el servidor** desde 
 ## Despliegue
 
 Vercel (frontend + `/api`) y Supabase. Variables: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY`.
-
-## Contribuir
-
-- Crea una rama desde `main` (`feat/…`, `fix/…`, `data/…`) y abre un PR. Usa commits en formato [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0/).
-- Antes del PR: `npm test` y `npm run build`.
-- **Nunca** subas claves. Las variables con prefijo `VITE_` llegan al navegador, así que la key de Gemini y la service role de Supabase no lo llevan.
-- Los números salen de `src/lib/agro`; Gemini solo los explica.
-- Los módulos que también usa `/api` (`src/lib/agro`, `src/lib/summary.ts`, `src/data`, `src/types`) se importan con rutas relativas, no con `@/`.
