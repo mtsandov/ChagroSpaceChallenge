@@ -39,7 +39,7 @@ cd pipeline/scripts
 ```
 
 ```bash
-../.venv/Scripts/python build_sar_layers.py --parcels ../data/parcelas/maate_cobertura_2022.shp
+../.venv/Scripts/python build_sar_layers.py --parcels ../data/daule/parcelas/maate_cobertura_2022.shp
 ```
 
 Para generar solo las máscaras de agua (no necesita parcelas):
