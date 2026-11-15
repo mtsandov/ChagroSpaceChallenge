@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Basin, SarParcelCollection, VirtualStation, WaterMaskCollection, WeatherDataset } from '../../types';
+import type { Basin, HvImages, SarParcelCollection, SarTimeline, WaterMaskCollection, WeatherDataset } from '../../types';
 import { loadData } from './client';
 
 export interface ViewerData {
@@ -7,14 +7,12 @@ export interface ViewerData {
   parcels: SarParcelCollection;
   waterBaseline: WaterMaskCollection;
   waterCurrent: WaterMaskCollection;
-  stations: VirtualStation[];
   weather: WeatherDataset;
+  timeline: SarTimeline;
+  waterTimeline: WaterMaskCollection;
+  hvImages: HvImages;
 }
 
-/**
- * Carga los datos del visor desde /public/data (NASA reales + estaciones y agricultor demo simulados).
- * TODO(nasa/supabase): cambiar por consultas a Supabase sin cambiar la forma de `ViewerData`.
- */
 export function useViewerData() {
   const [data, setData] = useState<ViewerData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -26,11 +24,13 @@ export function useViewerData() {
       loadData<SarParcelCollection>('sar_irrigation_anomalies.geojson'),
       loadData<WaterMaskCollection>('sar_water_mask_baseline.geojson'),
       loadData<WaterMaskCollection>('sar_water_mask_current.geojson'),
-      loadData<VirtualStation[]>('virtual_stations.json'),
       loadData<WeatherDataset>('weather_daily.json'),
+      loadData<SarTimeline>('sar_timeline.json').catch(() => ({})),
+      loadData<WaterMaskCollection>('sar_water_timeline.geojson').catch(() => ({ type: 'FeatureCollection' as const, features: [] })),
+      loadData<HvImages>('hv_images.json').catch(() => ({})),
     ])
-      .then(([basins, parcels, waterBaseline, waterCurrent, stations, weather]) => {
-        if (alive) setData({ basins, parcels, waterBaseline, waterCurrent, stations, weather });
+      .then(([basins, parcels, waterBaseline, waterCurrent, weather, timeline, waterTimeline, hvImages]) => {
+        if (alive) setData({ basins, parcels, waterBaseline, waterCurrent, weather, timeline, waterTimeline, hvImages });
       })
       .catch((e: Error) => alive && setError(e.message));
     return () => {

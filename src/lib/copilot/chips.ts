@@ -17,11 +17,6 @@ export const QUICK_CHIPS: Record<Role, QuickChip[]> = {
       prompt: 'Genera un reporte de transparencia hídrica para este sector.',
     },
     {
-      id: 'estero_dropping',
-      label: '¿Por qué baja el estero?',
-      prompt: '¿Por qué baja nuestro estero comunitario si llovió 0 mm?',
-    },
-    {
       id: 'basin_summary',
       label: 'Resumen de la cuenca',
       prompt: 'Dame un resumen del estado hídrico de la cuenca.',

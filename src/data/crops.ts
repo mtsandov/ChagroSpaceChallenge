@@ -2,7 +2,7 @@ import type { Crop, SoilType } from '../types';
 
 /**
  * Catálogo de cultivos con Kc por etapa (FAO-56, tabla 12) y parámetros de raíz
- * (FAO-56, tabla 22). Es el mismo contenido que siembra `supabase/seed.sql`.
+ * (FAO-56, tabla 22).
  */
 export const CROPS: Crop[] = [
   {

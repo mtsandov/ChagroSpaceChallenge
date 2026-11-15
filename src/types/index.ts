@@ -20,6 +20,7 @@ export interface Basin {
 }
 
 export type ParcelStatus = 'excessive' | 'normal' | 'deficit';
+export type ZoneStatus = ParcelStatus | 'inconclusive';
 export type ZoneType = 'commercial_farm' | 'smallholder' | 'community';
 
 export interface SarParcelProps {
@@ -45,22 +46,38 @@ export interface SarParcelProps {
 
 export type SarParcelFeature = Feature<Polygon, SarParcelProps>;
 export type SarParcelCollection = FeatureCollection<Polygon, SarParcelProps>;
-export type WaterMaskCollection = FeatureCollection<Polygon, { basin_id: string; scene: string; water_class: string }>;
-
-export type AlertLevel = 'normal' | 'warning' | 'critical_low';
-
-export interface VirtualStation {
-  station_id: string;
-  name: string;
-  basin_id: string;
-  lat: number;
-  lng: number;
-  canal_level_pct: number;
-  flow_trend: 'increasing' | 'stable' | 'decreasing';
-  alert_level: AlertLevel;
-  last_updated: string;
-  history: { date: string; level_pct: number }[];
+export interface TimelinePoint {
+  date: string;
+  water_pct: number | null;
+  hv_db: number | null;
+  ndvi: number | null;
+  soil_moisture_m3m3: number | null;
+  status: ZoneStatus;
 }
+
+export interface PassConditions {
+  rain_7d_mm: number | null;
+  rain_12d_mm: number | null;
+  smap_m3m3: number | null;
+  reliable: boolean;
+  month_rain_mm: number;
+  month_climatology_mm: number;
+}
+
+export type SarTimeline = Record<
+  string,
+  {
+    dates: string[];
+    reference_date: string;
+    climatology_period: string;
+    conditions: Record<string, PassConditions>;
+    zones: Record<string, TimelinePoint[]>;
+  }
+>;
+
+export type HvImages = Record<string, Record<string, { url: string; bounds: [[number, number], [number, number]] }>>;
+
+export type WaterMaskCollection = FeatureCollection<Polygon, { basin_id: string; scene?: string; water_class?: string; date?: string }>;
 
 /** Registro diario con los nombres de parámetro de NASA POWER (community=AG). */
 export interface PowerDaily {
@@ -143,6 +160,7 @@ export interface FarmerParcel {
   soil_type_id: string;
   area_ha: number;
   center: [number, number];
+  polygon?: [number, number][];
   irrigation: IrrigationSystem;
 }
 
@@ -156,5 +174,4 @@ export interface ChatMessage {
 /** Lo que el mapa tiene seleccionado; se usa como contexto del copiloto. */
 export type Selection =
   | { kind: 'parcel'; id: string }
-  | { kind: 'station'; id: string }
   | null;

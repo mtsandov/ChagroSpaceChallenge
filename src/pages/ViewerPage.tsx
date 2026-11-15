@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import TopNav from '../components/layout/TopNav';
 import SarMap from '../components/map/SarMap';
@@ -7,6 +7,7 @@ import CopilotDrawer from '../components/copilot/CopilotDrawer';
 import { useViewerData } from '../lib/api/useViewerData';
 import { summarizeBasin } from '../lib/summary';
 import { useAuth } from '../context/AuthContext';
+import { useFarmerParcels } from '../lib/farmerStore';
 import type { Role, Selection } from '../types';
 
 export default function ViewerPage() {
@@ -14,17 +15,15 @@ export default function ViewerPage() {
   const { user } = useAuth();
   const [basinId, setBasinId] = useState('daule');
   const [selection, setSelection] = useState<Selection>(null);
-  const [mode, setMode] = useState<Role>('public');
+  const mode: Role = user?.role === 'farmer' ? 'farmer' : 'public';
+  const [passDate, setPassDate] = useState<string | null>(null);
+  const { parcels: myParcels } = useFarmerParcels(user?.role === 'farmer' ? user.id : undefined);
 
-  // Los agricultores entran por defecto en modo agricultor; el público siempre en modo comunidad
-  useEffect(() => {
-    setMode(user?.role === 'farmer' ? 'farmer' : 'public');
-  }, [user]);
 
   const basin = data?.basins.find((b) => b.id === basinId) ?? data?.basins[0];
 
   const summary = useMemo(
-    () => (data && basin ? summarizeBasin(basin, data.weather[basin.id], data.parcels, data.stations) : null),
+    () => (data && basin ? summarizeBasin(basin, data.weather[basin.id], data.parcels) : null),
     [data, basin],
   );
 
@@ -32,12 +31,10 @@ export default function ViewerPage() {
     () => data?.parcels.features.filter((f) => f.properties.basin_id === basin?.id) ?? [],
     [data, basin],
   );
-  const stations = useMemo(() => data?.stations.filter((s) => s.basin_id === basin?.id) ?? [], [data, basin]);
 
   const selectionLabel = useMemo(() => {
     if (!selection || !data) return null;
-    if (selection.kind === 'parcel') return data.parcels.features.find((f) => f.properties.parcel_id === selection.id)?.properties.name ?? null;
-    return data.stations.find((s) => s.station_id === selection.id)?.name ?? null;
+    return data.parcels.features.find((f) => f.properties.parcel_id === selection.id)?.properties.name ?? null;
   }, [selection, data]);
 
   const changeBasin = (id: string) => {
@@ -47,7 +44,7 @@ export default function ViewerPage() {
 
   return (
     <div className="flex h-full flex-col lg:h-screen lg:overflow-hidden">
-      <TopNav basins={data?.basins} basinId={basinId} onBasinChange={changeBasin} mode={mode} onModeChange={setMode} />
+      <TopNav basins={data?.basins} basinId={basinId} onBasinChange={changeBasin} />
 
       {error && <div className="m-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">Error cargando datos: {error}</div>}
 
@@ -66,7 +63,11 @@ export default function ViewerPage() {
                 parcels={parcels}
                 waterBaseline={data.waterBaseline}
                 waterCurrent={data.waterCurrent}
-                stations={stations}
+                waterTimeline={data.waterTimeline}
+                timeline={data.timeline}
+                hvImages={data.hvImages}
+                farmerParcels={myParcels.filter((p) => p.basin_id === basin.id)}
+                onDateChange={setPassDate}
                 selection={selection}
                 onSelect={setSelection}
               />
@@ -80,6 +81,9 @@ export default function ViewerPage() {
               basinName={basin.short_name}
               selection={selection}
               selectionLabel={selectionLabel}
+              passDate={passDate}
+              data={data}
+              farmerParcel={mode === 'farmer' ? (myParcels.find((p) => p.basin_id === basin.id) ?? myParcels[0] ?? null) : null}
             />
           </div>
         </main>

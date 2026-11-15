@@ -1,20 +1,19 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Database, LogIn, LogOut, Sprout, Users } from 'lucide-react';
-import type { Basin, Role } from '../../types';
+import { Database, LogIn, LogOut } from 'lucide-react';
+import type { Basin } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import DataSourcesModal from './DataSourcesModal';
+import { assetUrl } from '../../lib/api/client';
 
 interface Props {
   basins?: Basin[];
   basinId?: string;
   onBasinChange?: (id: string) => void;
-  mode?: Role;
-  onModeChange?: (mode: Role) => void;
 }
 
-export default function TopNav({ basins, basinId, onBasinChange, mode, onModeChange }: Props) {
-  const { user, signOut, isDemo } = useAuth();
+export default function TopNav({ basins, basinId, onBasinChange }: Props) {
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [showSources, setShowSources] = useState(false);
   const isFarmer = user?.role === 'farmer';
@@ -22,7 +21,7 @@ export default function TopNav({ basins, basinId, onBasinChange, mode, onModeCha
   return (
     <header className="z-[1000] flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-slate-200 bg-white px-4 py-2 shadow-sm">
       <Link to="/" className="flex items-center gap-2">
-        <img src="/favicon.svg" alt="" className="h-8 w-8" />
+        <img src={assetUrl('favicon.svg')} alt="" className="h-8 w-8" />
         <div className="leading-tight">
           <div className="text-base font-bold text-brand-800">ChAgro</div>
           <div className="hidden text-[11px] text-slate-500 sm:block">SAR Water Transparency Monitor</div>
@@ -44,23 +43,6 @@ export default function TopNav({ basins, basinId, onBasinChange, mode, onModeCha
         </select>
       )}
 
-      {mode && onModeChange && isFarmer && (
-        <div className="flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-xs font-medium" role="group" aria-label="Modo">
-          <button
-            className={`flex items-center gap-1 rounded-md px-2.5 py-1.5 ${mode === 'farmer' ? 'bg-white text-brand-700 shadow' : 'text-slate-500'}`}
-            onClick={() => onModeChange('farmer')}
-          >
-            <Sprout size={14} /> Agricultor
-          </button>
-          <button
-            className={`flex items-center gap-1 rounded-md px-2.5 py-1.5 ${mode === 'public' ? 'bg-white text-brand-700 shadow' : 'text-slate-500'}`}
-            onClick={() => onModeChange('public')}
-          >
-            <Users size={14} /> Comunidad
-          </button>
-        </div>
-      )}
-
       <nav className="ml-auto flex items-center gap-1 text-sm">
         <NavLink to="/" end className={({ isActive }) => `btn-ghost px-3 py-1.5 ${isActive ? 'text-brand-700' : ''}`}>
           Visor
@@ -75,11 +57,9 @@ export default function TopNav({ basins, basinId, onBasinChange, mode, onModeCha
           <span className="hidden md:inline">Fuentes</span>
         </button>
 
-        {isDemo && (
-          <span className="hidden rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-amber-700 lg:inline">
-            Demo
-          </span>
-        )}
+        <span className="hidden rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-amber-700 lg:inline">
+          Demo
+        </span>
 
         {user ? (
           <div className="flex items-center gap-2 pl-2">
@@ -89,8 +69,8 @@ export default function TopNav({ basins, basinId, onBasinChange, mode, onModeCha
             </div>
             <button
               className="btn-secondary px-2.5 py-1.5"
-              onClick={async () => {
-                await signOut();
+              onClick={() => {
+                signOut();
                 navigate('/');
               }}
               title="Cerrar sesión"

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import type { FarmerParcel, IrrigationType } from '../../types';
 import { CROPS, SOIL_TYPES } from '../../data/crops';
+import ParcelDrawMap, { polygonAreaHa, polygonCenter } from './ParcelDrawMap';
 
 const BASINS = [
   { id: 'daule', name: 'Daule', center: [-1.865, -79.985] as [number, number] },
@@ -15,10 +16,6 @@ const TYPES: { id: IrrigationType; label: string; mode: 'per_plant' | 'per_area'
   { id: 'flood', label: 'Inundación', mode: 'per_area', efficiency: 55 },
 ];
 
-/**
- * Registro de parcela + sistema de riego.
- * TODO: dibujar el polígono con leaflet-geoman o subir GeoJSON/KML; guardar en Supabase.
- */
 export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerParcel) => void; onCancel: () => void }) {
   const [f, setF] = useState({
     name: '',
@@ -38,12 +35,20 @@ export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerPar
     pump_kw: 10,
     pump_head_m: 10,
   });
+  const [draw, setDraw] = useState(true);
+  const [points, setPoints] = useState<[number, number][]>([]);
+  const [drawError, setDrawError] = useState(false);
   const set = (k: keyof typeof f, v: string | number) => setF((prev) => ({ ...prev, [k]: v }));
+  const drawnArea = draw && points.length >= 3 ? +polygonAreaHa(points).toFixed(2) : null;
   const type = TYPES.find((t) => t.id === f.type)!;
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const basin = BASINS.find((b) => b.id === f.basin_id)!;
+    if (draw && points.length < 3) {
+      setDrawError(true);
+      return;
+    }
     onSave({
       id: `local-${Date.now()}`,
       name: f.name,
@@ -51,8 +56,9 @@ export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerPar
       crop_id: f.crop_id,
       planting_date: f.planting_date,
       soil_type_id: f.soil_type_id,
-      area_ha: Number(f.area_ha),
-      center: basin.center,
+      area_ha: drawnArea ?? Number(f.area_ha),
+      center: drawnArea ? polygonCenter(points) : basin.center,
+      ...(drawnArea ? { polygon: points } : {}),
       irrigation: {
         type: f.type,
         mode: type.mode,
@@ -83,14 +89,30 @@ export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerPar
           <input className="input" required value={f.name} onChange={(e) => set('name', e.target.value)} placeholder="Lote 3" />
         </Field>
         <Field label="Cuenca">
-          <select className="input" value={f.basin_id} onChange={(e) => set('basin_id', e.target.value)}>
+          <select
+            className="input"
+            value={f.basin_id}
+            onChange={(e) => {
+              set('basin_id', e.target.value);
+              setPoints([]);
+            }}
+          >
             {BASINS.map((b) => (
               <option key={b.id} value={b.id}>{b.name}</option>
             ))}
           </select>
         </Field>
         <Field label="Área (ha)">
-          <input className="input" type="number" min={0.1} step={0.1} required value={f.area_ha} onChange={(e) => set('area_ha', e.target.value)} />
+          <input
+            className="input"
+            type="number"
+            min={0.1}
+            step={0.01}
+            required
+            disabled={drawnArea !== null}
+            value={drawnArea ?? f.area_ha}
+            onChange={(e) => set('area_ha', e.target.value)}
+          />
         </Field>
         <Field label="Cultivo">
           <select className="input" value={f.crop_id} onChange={(e) => set('crop_id', e.target.value)}>
@@ -109,6 +131,45 @@ export default function ParcelForm({ onSave, onCancel }: { onSave: (p: FarmerPar
             ))}
           </select>
         </Field>
+      </div>
+
+      <div className="border-t border-slate-100 pt-4">
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <div className="text-sm font-semibold">Ubicación de la parcela</div>
+          <div className="flex rounded-lg bg-slate-100 p-0.5 text-xs">
+            {[
+              { v: true, label: 'Dibujar en el mapa' },
+              { v: false, label: 'Solo datos' },
+            ].map((o) => (
+              <button
+                key={o.label}
+                type="button"
+                onClick={() => {
+                  setDraw(o.v);
+                  setDrawError(false);
+                }}
+                className={`rounded-md px-3 py-1.5 ${draw === o.v ? 'bg-white font-semibold shadow' : 'text-slate-500'}`}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        {draw ? (
+          <>
+            <ParcelDrawMap
+              center={BASINS.find((b) => b.id === f.basin_id)!.center}
+              points={points}
+              onChange={(p) => {
+                setPoints(p);
+                setDrawError(false);
+              }}
+            />
+            {drawError && <div className="mt-2 text-xs text-red-600">Marca al menos 3 esquinas o elige "Solo datos".</div>}
+          </>
+        ) : (
+          <p className="text-xs text-slate-500">La parcela se ubicará en el centro de la cuenca con el área que indiques arriba.</p>
+        )}
       </div>
 
       <div className="border-t border-slate-100 pt-4">
