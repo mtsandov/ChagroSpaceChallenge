@@ -81,7 +81,7 @@ Los rasters (`*.tif`, `*.h5`, `*.nc`) **no se versionan**. Cada quien los genera
 
 1. Promedia NISAR GCOV HH a 50 m y marca como agua lo que está bajo −18 dB en cada escena. Descarta manchas de menos de 1 ha y vectoriza.
 2. Con `--parcels`, calcula por parcela: % con agua (base y actual), retrodispersión, ΔdB, humedad SME2 y NDVI.
-3. Clasifica cada parcela: `excessive` (≥ 30 % con agua), `deficit` (< 5 % con agua y además suelo o NDVI secos) o `normal`.
+3. Clasifica cada parcela: `excessive` si el agua **aumentó ≥ 10 puntos %** respecto a la escena base (riego nuevo en época seca, sin castigar el agua permanente), `deficit` si tiene < 5 % con agua y además suelo o NDVI secos, o `normal`.
 4. Reemplaza en `public/data` solo las features de la cuenca actual.
 
 Con `--masks-only` genera solo las máscaras de agua. Los umbrales están al inicio del script. Si las parcelas tienen la columna `cbn1` (capa MAATE), se filtran a *TIERRA AGROPECUARIA*.
