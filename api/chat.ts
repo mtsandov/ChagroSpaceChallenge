@@ -1,44 +1,25 @@
-import { resolveUser } from './_lib/auth';
-import { buildContext, fallbackAnswer, systemPrompt } from './_lib/copilot';
 import { methodNotAllowed, type ApiRequest, type ApiResponse } from './_lib/http';
-import type { Selection } from '../src/types';
 
 const GEMINI_TIMEOUT_MS = 20_000;
 
 interface ChatBody {
   messages?: { role: 'user' | 'assistant'; content: string }[];
-  basin_id?: string;
-  selection?: Selection;
-  farmer_parcel_id?: string;
-  chip_id?: string;
+  system?: string;
 }
 
-/**
- * POST /api/chat
- * Arma el contexto según el rol (del token), llama a Gemini y, si no hay key
- * o falla o tarda demasiado, responde con fallback_copilot.json.
- */
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method !== 'POST') return methodNotAllowed(res, ['POST']);
 
   const body = (req.body ?? {}) as ChatBody;
   const messages = (body.messages ?? []).slice(-10).filter((m) => typeof m.content === 'string' && m.content.trim());
-  if (messages.length === 0) return res.status(400).json({ error: 'messages es requerido' });
-
-  const user = await resolveUser(req);
-  const ctx = await buildContext({
-    role: user.role,
-    userId: user.id,
-    basinId: body.basin_id ?? 'daule',
-    selection: body.selection ?? null,
-    farmerParcelId: body.farmer_parcel_id,
-  });
+  const system = typeof body.system === 'string' ? body.system.slice(0, 20_000) : '';
+  if (messages.length === 0 || !system) return res.status(400).json({ error: 'messages y system son requeridos' });
 
   const groqKey = process.env.GROQ_API_KEY;
   if (groqKey) {
     try {
-      const reply = await callGroq(groqKey, systemPrompt(ctx), messages);
-      if (reply) return res.status(200).json({ reply, source: 'gemini', role: user.role });
+      const reply = await callGroq(groqKey, system, messages);
+      if (reply) return res.status(200).json({ reply });
     } catch (err) {
       console.warn('[chat] Groq falló:', (err as Error).message);
     }
@@ -47,15 +28,14 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (apiKey) {
     try {
-      const reply = await callGemini(apiKey, systemPrompt(ctx), messages);
-      if (reply) return res.status(200).json({ reply, source: 'gemini', role: user.role });
+      const reply = await callGemini(apiKey, system, messages);
+      if (reply) return res.status(200).json({ reply });
     } catch (err) {
-      console.warn('[chat] Gemini falló, usando fallback:', (err as Error).message);
+      console.warn('[chat] Gemini falló:', (err as Error).message);
     }
   }
 
-  const reply = await fallbackAnswer(ctx, body.chip_id);
-  res.status(200).json({ reply, source: 'fallback', role: user.role });
+  res.status(503).json({ error: 'IA no disponible' });
 }
 
 async function callGemini(apiKey: string, system: string, messages: { role: string; content: string }[]) {

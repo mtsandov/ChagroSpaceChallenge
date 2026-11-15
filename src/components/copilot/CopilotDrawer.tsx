@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Bot, Loader2, MapPin, Send, WifiOff } from 'lucide-react';
-import type { ChatMessage, Role, Selection } from '../../types';
+import { Bot, Loader2, MapPin, Send, Zap } from 'lucide-react';
+import type { ChatMessage, FarmerParcel, Role, Selection } from '../../types';
 import { QUICK_CHIPS } from '../../lib/copilot/chips';
-import { apiPost } from '../../lib/api/client';
-import { useAuth } from '../../context/AuthContext';
+import { apiPost, loadData } from '../../lib/api/client';
+import { buildContext, fallbackAnswer, systemPrompt, type CopilotData, type Fallbacks } from '../../lib/copilot/context';
 import MessageText from './MessageText';
+import { shortDate } from '../map/TimeSlider';
 
 interface Props {
   mode: Role;
@@ -12,17 +13,17 @@ interface Props {
   basinName: string;
   selection: Selection;
   selectionLabel: string | null;
+  passDate: string | null;
+  data: CopilotData;
+  farmerParcel: FarmerParcel | null;
 }
 
-interface ChatResponse {
-  reply: string;
-  source: 'gemini' | 'fallback';
-}
+const CHAT_URL = import.meta.env.VITE_CHAT_API_URL ?? (import.meta.env.DEV ? '/api/chat' : '');
 
 const uid = () => Math.random().toString(36).slice(2);
 
-export default function CopilotDrawer({ mode, basinId, basinName, selection, selectionLabel }: Props) {
-  const { getAccessToken, user } = useAuth();
+export default function CopilotDrawer({ mode, basinId, basinName, selection, selectionLabel, passDate, data, farmerParcel }: Props) {
+  const [fallbacks, setFallbacks] = useState<Fallbacks | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>(() => [welcome(mode)]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
@@ -31,6 +32,10 @@ export default function CopilotDrawer({ mode, basinId, basinName, selection, sel
   useEffect(() => {
     setMessages([welcome(mode)]);
   }, [mode]);
+
+  useEffect(() => {
+    loadData<Fallbacks>('fallback_copilot.json').then(setFallbacks).catch(() => setFallbacks(null));
+  }, []);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' });
@@ -43,25 +48,20 @@ export default function CopilotDrawer({ mode, basinId, basinName, selection, sel
     setMessages((m) => [...m, userMsg]);
     setInput('');
     setSending(true);
+    const ctx = buildContext(data, { role: mode, basinId, selection, farmerParcel, date: passDate });
+    const offline = () =>
+      fallbacks ? fallbackAnswer(ctx, fallbacks, chipId) : 'No pude cargar las respuestas del copiloto.';
     try {
-      // El rol efectivo lo decide el servidor con el token; en "modo comunidad" no se envía token.
-      const token = mode === 'farmer' ? await getAccessToken() : null;
-      const res = await apiPost<ChatResponse>(
-        '/api/chat',
-        {
+      let reply: string | null = null;
+      if (CHAT_URL) {
+        reply = await apiPost<{ reply: string }>(CHAT_URL, {
           messages: history.map(({ role, content }) => ({ role, content })),
-          basin_id: basinId,
-          selection,
-          chip_id: chipId,
-        },
-        token,
-      );
-      setMessages((m) => [...m, { id: uid(), role: 'assistant', content: res.reply, source: res.source }]);
-    } catch (e) {
-      setMessages((m) => [
-        ...m,
-        { id: uid(), role: 'assistant', content: `No pude responder: ${(e as Error).message}`, source: 'fallback' },
-      ]);
+          system: systemPrompt(ctx),
+        })
+          .then((r) => r.reply)
+          .catch(() => null);
+      }
+      setMessages((m) => [...m, { id: uid(), role: 'assistant', content: reply ?? offline(), source: reply ? 'gemini' : 'fallback' }]);
     } finally {
       setSending(false);
     }
@@ -85,6 +85,7 @@ export default function CopilotDrawer({ mode, basinId, basinName, selection, sel
           <div className="flex items-center gap-1 truncate text-[11px] text-brand-100">
             <MapPin size={11} />
             {selectionLabel ? `Analizando: ${selectionLabel}` : `Cuenca: ${basinName}`}
+            {passDate && ` · pase ${shortDate(passDate)}`}
           </div>
         </div>
         <span className="rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase">
@@ -103,7 +104,7 @@ export default function CopilotDrawer({ mode, basinId, basinName, selection, sel
               <MessageText text={m.content} />
               {m.source === 'fallback' && (
                 <div className="mt-1 flex items-center gap-1 text-[10px] text-slate-400">
-                  <WifiOff size={10} /> respuesta sin conexión a la IA
+                  <Zap size={10} /> respuesta automática con los datos del mapa
                 </div>
               )}
             </div>
@@ -124,7 +125,7 @@ export default function CopilotDrawer({ mode, basinId, basinName, selection, sel
             <button
               key={c.id}
               className="chip bg-white"
-              disabled={sending || (c.needsFarmerParcel && user?.role !== 'farmer')}
+              disabled={sending || (c.needsFarmerParcel && !farmerParcel)}
               onClick={() => void send(c.prompt, c.id)}
             >
               {c.label}
@@ -156,6 +157,6 @@ function welcome(mode: Role): ChatMessage {
     content:
       mode === 'farmer'
         ? '¡Hola! Soy tu copiloto de riego. Selecciona una parcela en el mapa o usa un botón rápido para ver **cuánta agua necesita tu cultivo** y cuánto puedes ahorrar.'
-        : '¡Hola! Te ayudo a entender el agua de tu cuenca con datos de radar de la NASA. Toca una parcela o estación del mapa, o usa un botón rápido.',
+        : '¡Hola! Te ayudo a entender el agua de tu cuenca con datos de radar de la NASA. Toca una zona del mapa, mueve el slider de fechas o usa un botón rápido.',
   };
 }

@@ -5,6 +5,7 @@ import { fileURLToPath, URL } from 'node:url';
 import { devApiPlugin } from './scripts/dev-api-plugin';
 
 export default defineConfig({
+  base: process.env.VITE_BASE ?? '/',
   plugins: [react(), devApiPlugin()],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
