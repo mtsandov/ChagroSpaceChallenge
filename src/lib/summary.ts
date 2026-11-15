@@ -18,6 +18,7 @@ import { findCrop, findSoil } from '../data/crops';
 export interface BasinSummary {
   basin: Basin;
   rain15: number;
+  sarWindow: { from: string; to: string; rain: number } | null;
   et0Avg7: number;
   irrigatedHa: number;
   quotaPct: number;
@@ -39,6 +40,19 @@ export function summarizeBasin(
   const own = parcels.features.filter((f) => f.properties.basin_id === basin.id);
   const irrigatedHa = own.reduce((s, f) => s + f.properties.irrigated_area_ha, 0);
   const ownStations = stations.filter((s) => s.basin_id === basin.id);
+  const first = own[0]?.properties;
+  const sarWindow = first
+    ? {
+        from: first.baseline_date,
+        to: first.observation_date,
+        rain: round(
+          dailyEt0
+            .filter((d) => d.date >= first.baseline_date && d.date <= first.observation_date)
+            .reduce((s, d) => s + d.rainfall, 0),
+          1,
+        ),
+      }
+    : null;
   const lowestStation = ownStations.reduce<VirtualStation | null>(
     (lo, s) => (lo === null || s.canal_level_pct < lo.canal_level_pct ? s : lo),
     null,
@@ -47,6 +61,7 @@ export function summarizeBasin(
   return {
     basin,
     rain15: round(last15.reduce((s, d) => s + d.rainfall, 0), 1),
+    sarWindow,
     et0Avg7: round(last7.reduce((s, d) => s + (d.et0 ?? 0), 0) / Math.max(last7.length, 1), 2),
     irrigatedHa: round(irrigatedHa, 0),
     quotaPct: Math.round(((irrigatedHa - basin.sustainable_quota_ha) / basin.sustainable_quota_ha) * 100),

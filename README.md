@@ -31,7 +31,8 @@ Para usar Supabase y Gemini:
 | `weather_daily.json` | **NASA**: POWER (histórico) + GEOS-FP (pronóstico) |
 | `sar_irrigation_anomalies.geojson`, `sar_water_mask_*.geojson` | **NASA**: NISAR, SMAP, VIIRS + parcelas de MapBiomas |
 | `basins.json` | Configuración: cuencas `daule` y `santa-elena` |
-| `virtual_stations.json`, `farmer_demo.json` | Simulados |
+| `virtual_stations.json` | Vacío: no hay un dato real de nivel de esteros |
+| `farmer_demo.json` | Simulado (modo agricultor demo) |
 | `fallback_copilot.json` | Respuestas sin conexión |
 
 Los datos NASA se generan con [`pipeline/`](pipeline/README.md), que también describe el formato de cada archivo.

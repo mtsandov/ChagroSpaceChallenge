@@ -13,7 +13,7 @@ Definidas en `scripts/config.py` → `BASINS`. Los datos de cada una van en `dat
 | `santa-elena` | -2.235, -80.585 | -80.685, -2.335, -80.485, -2.135 | track 112, frame 090 | h09v09 |
 
 - **Periodo:** 2026-07-01 → 2026-11-14.
-- **Par NISAR de época seca:** 2026-07-15 (base) vs 2026-09-01 (actual). Entre ambas escenas cayeron ~4 mm de lluvia en Daule y 3.4 mm en Santa Elena, según POWER.
+- **Par NISAR de época seca:** 2026-07-15 (base) vs 2026-09-01 (actual). Entre ambas escenas cayeron 9 mm de lluvia en Daule y 3.4 mm en Santa Elena en 48 días, según POWER.
 
 ## Entorno
 
@@ -42,6 +42,8 @@ python3 fetch_smap.py
 ../.venv/bin/python fetch_nisar.py
 ../.venv/bin/python build_parcels_mapbiomas.py ../data/$BASIN/parcelas/<raster_mapbiomas>.tif
 ../.venv/bin/python build_sar_layers.py --parcels ../data/$BASIN/parcelas/mapbiomas_agro.geojson
+../.venv/bin/python dissolve_parcels.py
+../.venv/bin/python build_showcase.py
 ```
 
 | Script | Fuente | Genera | Login |
@@ -54,6 +56,8 @@ python3 fetch_smap.py
 | `fetch_nisar.py` | NISAR L2 GCOV + L3 SME2 (ASF) | `nisar/` | Sí |
 | `build_parcels_mapbiomas.py` | MapBiomas Ecuador col. 4 | `parcelas/mapbiomas_agro.geojson` | — |
 | `build_sar_layers.py` | Todo lo anterior | `public/data/sar_*.geojson` → `<basin>` | — |
+| `dissolve_parcels.py` | `sar_irrigation_anomalies.geojson` | Une las celdas vecinas con el mismo estado en zonas | — |
+| `build_showcase.py` | Zonas + máscaras de agua | Deja en `public/data` solo las zonas destacadas cerca del centro de la cuenca (3 en exceso, 2 normales, 2 en déficit), con contorno redondeado, y recorta el agua a esas zonas | — |
 
 Los rasters (`*.tif`, `*.h5`, `*.nc`) **no se versionan**. Cada quien los genera con los scripts o los recibe en un ZIP que se descomprime dentro de `pipeline/`.
 
@@ -108,13 +112,10 @@ La app lee `public/data/` y **no cambia** si se respetan los nombres de archivo 
 | ↳ `daily[]` | POWER | `date`, `T2M_MAX`, `T2M_MIN` (°C), `T2MDEW` (°C, para eₐ), `RH2M` (%), `WS2M` (m/s a 2 m), `ALLSKY_SFC_SW_DWN` (MJ/m²/día), `PS` (**kPa**), `PRECTOTCORR` (mm/día). `-999` = faltante. La ET₀ **no** se guarda: la calcula `src/lib/agro/penmanMonteith.ts` |
 | ↳ `forecast.daily[]` | GEOS-FP | `date`, `temperature_2m_max`, `temperature_2m_min`, `precipitation_sum`, `precipitation_probability_max` (hoy `null`), `et0_fao_evapotranspiration` |
 | `sar_irrigation_anomalies.geojson` | `build_sar_layers.py --parcels` | `Polygon` en EPSG:4326 → `parcel_id`, `name`, `basin_id`, `zone_type` (`commercial_farm` \| `smallholder` \| `community`), `crop`, `area_hectares`, `irrigated_area_pct`, `irrigated_area_ha`, `baseline_water_pct`, `sar_backscatter_db`, `sar_delta_db` (dB), `soil_moisture_m3m3`, `ndvi` (0–1), `status` (`excessive` \| `normal` \| `deficit`), `status_label`, `observation_date`, `baseline_date`, `sensor` |
-| `sar_water_mask_{baseline,current}.geojson` | `build_sar_layers.py` | Polígonos de agua → `basin_id`, `scene` (`baseline` \| `current`), `water_class` (`irrigation` \| `residual` \| `river`) |
 | `basins.json` | A mano | `id`, `name`, `short_name`, `description`, `center [lat, lng]`, `zoom`, `sustainable_quota_ha` (cuota para el KPI "+X % sobre la cuota") |
-| `virtual_stations.json` | A mano (simulado) | `station_id`, `name`, `basin_id`, `lat`, `lng`, `canal_level_pct`, `flow_trend` (`increasing` \| `stable` \| `decreasing`), `alert_level` (`normal` \| `warning` \| `critical_low`), `last_updated`, `history [{date, level_pct}]` |
+| `virtual_stations.json` | A mano (hoy vacío) | `station_id`, `name`, `basin_id`, `lat`, `lng`, `canal_level_pct`, `flow_trend` (`increasing` \| `stable` \| `decreasing`), `alert_level` (`normal` \| `warning` \| `critical_low`), `last_updated`, `history [{date, level_pct}]` |
 | `farmer_demo.json` | A mano (simulado) | Parcelas del agricultor demo. En producción viven en las tablas `parcels` e `irrigation_systems` de Supabase |
 | `fallback_copilot.json` | A mano | Respuestas sin conexión por chip, con `{{variables}}` definidas en `api/_lib/copilot.ts` (`templateValues`) |
-
-Para mostrar los rasters en el mapa en lugar de polígonos, se pueden servir como tiles XYZ (`gdal2tiles`) en `public/tiles/<escena>/{z}/{x}/{y}.png` y agregar un `<TileLayer>` en los panes `sar-baseline` y `sar-current` de `SarMap.tsx`.
 
 ## Atribución
 > Datos: NASA POWER (LaRC), NASA GMAO GEOS-FP, NASA VIIRS VNP13A1 (LP DAAC), NASA SMAP (NSIDC DAAC), NASA-ISRO NISAR (ASF DAAC). Parcelas: MapBiomas Ecuador, colección 4.
