@@ -1,0 +1,725 @@
+{
+ "corrida": "20261114_12",
+ "horas": [
+  {
+   "hora_utc": "2026-11-14T09:30Z",
+   "lluvia_mm_h": 0.037,
+   "evaporacion_mm_h": 0.025,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 24.68,
+   "viento_2m_ms": 0.13,
+   "presion_vapor_kpa": 3.049,
+   "presion_kpa": 100.72
+  },
+  {
+   "hora_utc": "2026-11-14T10:30Z",
+   "lluvia_mm_h": 0.222,
+   "evaporacion_mm_h": 0.02,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 24.65,
+   "viento_2m_ms": 0.13,
+   "presion_vapor_kpa": 3.041,
+   "presion_kpa": 100.78
+  },
+  {
+   "hora_utc": "2026-11-14T11:30Z",
+   "lluvia_mm_h": 0.06,
+   "evaporacion_mm_h": 0.032,
+   "radiacion_w_m2": 20.7,
+   "temp_c": 24.67,
+   "viento_2m_ms": 0.2,
+   "presion_vapor_kpa": 3.047,
+   "presion_kpa": 100.82
+  },
+  {
+   "hora_utc": "2026-11-14T12:30Z",
+   "lluvia_mm_h": 0.053,
+   "evaporacion_mm_h": 0.078,
+   "radiacion_w_m2": 78.0,
+   "temp_c": 24.91,
+   "viento_2m_ms": 0.24,
+   "presion_vapor_kpa": 3.049,
+   "presion_kpa": 100.88
+  },
+  {
+   "hora_utc": "2026-11-14T13:30Z",
+   "lluvia_mm_h": 0.014,
+   "evaporacion_mm_h": 0.123,
+   "radiacion_w_m2": 172.0,
+   "temp_c": 25.54,
+   "viento_2m_ms": 0.15,
+   "presion_vapor_kpa": 3.012,
+   "presion_kpa": 100.93
+  },
+  {
+   "hora_utc": "2026-11-14T14:30Z",
+   "lluvia_mm_h": 0.046,
+   "evaporacion_mm_h": 0.225,
+   "radiacion_w_m2": 319.0,
+   "temp_c": 26.83,
+   "viento_2m_ms": 0.15,
+   "presion_vapor_kpa": 2.916,
+   "presion_kpa": 100.94
+  },
+  {
+   "hora_utc": "2026-11-14T15:30Z",
+   "lluvia_mm_h": 0.002,
+   "evaporacion_mm_h": 0.401,
+   "radiacion_w_m2": 669.0,
+   "temp_c": 28.49,
+   "viento_2m_ms": 0.48,
+   "presion_vapor_kpa": 2.881,
+   "presion_kpa": 100.93
+  },
+  {
+   "hora_utc": "2026-11-14T16:30Z",
+   "lluvia_mm_h": 0.008,
+   "evaporacion_mm_h": 0.565,
+   "radiacion_w_m2": 886.0,
+   "temp_c": 30.24,
+   "viento_2m_ms": 0.87,
+   "presion_vapor_kpa": 2.879,
+   "presion_kpa": 100.88
+  },
+  {
+   "hora_utc": "2026-11-14T17:30Z",
+   "lluvia_mm_h": 0.06,
+   "evaporacion_mm_h": 0.657,
+   "radiacion_w_m2": 909.0,
+   "temp_c": 31.38,
+   "viento_2m_ms": 0.83,
+   "presion_vapor_kpa": 2.89,
+   "presion_kpa": 100.76
+  },
+  {
+   "hora_utc": "2026-11-14T18:30Z",
+   "lluvia_mm_h": 0.326,
+   "evaporacion_mm_h": 0.683,
+   "radiacion_w_m2": 786.0,
+   "temp_c": 31.88,
+   "viento_2m_ms": 0.7,
+   "presion_vapor_kpa": 2.897,
+   "presion_kpa": 100.67
+  },
+  {
+   "hora_utc": "2026-11-14T19:30Z",
+   "lluvia_mm_h": 0.575,
+   "evaporacion_mm_h": 0.622,
+   "radiacion_w_m2": 601.0,
+   "temp_c": 31.62,
+   "viento_2m_ms": 0.8,
+   "presion_vapor_kpa": 2.943,
+   "presion_kpa": 100.61
+  },
+  {
+   "hora_utc": "2026-11-14T20:30Z",
+   "lluvia_mm_h": 0.823,
+   "evaporacion_mm_h": 0.417,
+   "radiacion_w_m2": 321.5,
+   "temp_c": 30.7,
+   "viento_2m_ms": 0.6,
+   "presion_vapor_kpa": 3.082,
+   "presion_kpa": 100.56
+  },
+  {
+   "hora_utc": "2026-11-14T21:30Z",
+   "lluvia_mm_h": 1.775,
+   "evaporacion_mm_h": 0.774,
+   "radiacion_w_m2": 66.0,
+   "temp_c": 29.18,
+   "viento_2m_ms": 0.03,
+   "presion_vapor_kpa": 3.293,
+   "presion_kpa": 100.55
+  },
+  {
+   "hora_utc": "2026-11-14T22:30Z",
+   "lluvia_mm_h": 0.944,
+   "evaporacion_mm_h": 0.012,
+   "radiacion_w_m2": 13.7,
+   "temp_c": 26.01,
+   "viento_2m_ms": 0.55,
+   "presion_vapor_kpa": 3.197,
+   "presion_kpa": 100.56
+  },
+  {
+   "hora_utc": "2026-11-14T23:30Z",
+   "lluvia_mm_h": 1.598,
+   "evaporacion_mm_h": 0.017,
+   "radiacion_w_m2": 0.1,
+   "temp_c": 26.33,
+   "viento_2m_ms": 0.36,
+   "presion_vapor_kpa": 3.36,
+   "presion_kpa": 100.65
+  },
+  {
+   "hora_utc": "2026-11-15T00:30Z",
+   "lluvia_mm_h": 2.705,
+   "evaporacion_mm_h": 0.05,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 26.36,
+   "viento_2m_ms": 0.61,
+   "presion_vapor_kpa": 3.334,
+   "presion_kpa": 100.75
+  },
+  {
+   "hora_utc": "2026-11-15T01:30Z",
+   "lluvia_mm_h": 7.011,
+   "evaporacion_mm_h": 0.041,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 26.02,
+   "viento_2m_ms": 0.53,
+   "presion_vapor_kpa": 3.281,
+   "presion_kpa": 100.89
+  },
+  {
+   "hora_utc": "2026-11-15T02:30Z",
+   "lluvia_mm_h": 14.557,
+   "evaporacion_mm_h": 0.026,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.93,
+   "viento_2m_ms": 0.54,
+   "presion_vapor_kpa": 3.284,
+   "presion_kpa": 101.01
+  },
+  {
+   "hora_utc": "2026-11-15T03:30Z",
+   "lluvia_mm_h": 18.484,
+   "evaporacion_mm_h": 0.025,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.83,
+   "viento_2m_ms": 0.58,
+   "presion_vapor_kpa": 3.283,
+   "presion_kpa": 101.09
+  },
+  {
+   "hora_utc": "2026-11-15T04:30Z",
+   "lluvia_mm_h": 17.935,
+   "evaporacion_mm_h": 0.016,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.7,
+   "viento_2m_ms": 0.48,
+   "presion_vapor_kpa": 3.259,
+   "presion_kpa": 101.07
+  },
+  {
+   "hora_utc": "2026-11-15T05:30Z",
+   "lluvia_mm_h": 13.225,
+   "evaporacion_mm_h": 0.005,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.58,
+   "viento_2m_ms": 0.27,
+   "presion_vapor_kpa": 3.252,
+   "presion_kpa": 101.0
+  },
+  {
+   "hora_utc": "2026-11-15T06:30Z",
+   "lluvia_mm_h": 3.275,
+   "evaporacion_mm_h": 0.0,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.56,
+   "viento_2m_ms": 0.07,
+   "presion_vapor_kpa": 3.23,
+   "presion_kpa": 100.94
+  },
+  {
+   "hora_utc": "2026-11-15T07:30Z",
+   "lluvia_mm_h": 0.984,
+   "evaporacion_mm_h": 0.008,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.51,
+   "viento_2m_ms": 0.14,
+   "presion_vapor_kpa": 3.223,
+   "presion_kpa": 100.89
+  },
+  {
+   "hora_utc": "2026-11-15T08:30Z",
+   "lluvia_mm_h": 1.384,
+   "evaporacion_mm_h": 0.014,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.43,
+   "viento_2m_ms": 0.32,
+   "presion_vapor_kpa": 3.209,
+   "presion_kpa": 100.9
+  },
+  {
+   "hora_utc": "2026-11-15T09:30Z",
+   "lluvia_mm_h": 1.469,
+   "evaporacion_mm_h": 0.022,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.31,
+   "viento_2m_ms": 0.45,
+   "presion_vapor_kpa": 3.186,
+   "presion_kpa": 100.92
+  },
+  {
+   "hora_utc": "2026-11-15T10:30Z",
+   "lluvia_mm_h": 0.767,
+   "evaporacion_mm_h": 0.03,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.12,
+   "viento_2m_ms": 0.49,
+   "presion_vapor_kpa": 3.143,
+   "presion_kpa": 100.96
+  },
+  {
+   "hora_utc": "2026-11-15T11:30Z",
+   "lluvia_mm_h": 0.621,
+   "evaporacion_mm_h": 0.039,
+   "radiacion_w_m2": 9.2,
+   "temp_c": 24.94,
+   "viento_2m_ms": 0.53,
+   "presion_vapor_kpa": 3.111,
+   "presion_kpa": 101.0
+  },
+  {
+   "hora_utc": "2026-11-15T12:30Z",
+   "lluvia_mm_h": 0.617,
+   "evaporacion_mm_h": 0.052,
+   "radiacion_w_m2": 35.2,
+   "temp_c": 24.96,
+   "viento_2m_ms": 0.52,
+   "presion_vapor_kpa": 3.096,
+   "presion_kpa": 101.15
+  },
+  {
+   "hora_utc": "2026-11-15T13:30Z",
+   "lluvia_mm_h": 0.128,
+   "evaporacion_mm_h": 0.089,
+   "radiacion_w_m2": 85.0,
+   "temp_c": 25.12,
+   "viento_2m_ms": 0.61,
+   "presion_vapor_kpa": 3.093,
+   "presion_kpa": 101.18
+  },
+  {
+   "hora_utc": "2026-11-15T14:30Z",
+   "lluvia_mm_h": 0.105,
+   "evaporacion_mm_h": 0.216,
+   "radiacion_w_m2": 343.5,
+   "temp_c": 26.29,
+   "viento_2m_ms": 0.7,
+   "presion_vapor_kpa": 3.001,
+   "presion_kpa": 101.21
+  },
+  {
+   "hora_utc": "2026-11-15T15:30Z",
+   "lluvia_mm_h": 0.171,
+   "evaporacion_mm_h": 0.453,
+   "radiacion_w_m2": 689.0,
+   "temp_c": 28.2,
+   "viento_2m_ms": 1.04,
+   "presion_vapor_kpa": 2.922,
+   "presion_kpa": 101.15
+  },
+  {
+   "hora_utc": "2026-11-15T16:30Z",
+   "lluvia_mm_h": 0.145,
+   "evaporacion_mm_h": 0.596,
+   "radiacion_w_m2": 827.0,
+   "temp_c": 29.61,
+   "viento_2m_ms": 1.43,
+   "presion_vapor_kpa": 2.903,
+   "presion_kpa": 101.03
+  },
+  {
+   "hora_utc": "2026-11-15T17:30Z",
+   "lluvia_mm_h": 0.16,
+   "evaporacion_mm_h": 0.681,
+   "radiacion_w_m2": 920.0,
+   "temp_c": 30.45,
+   "viento_2m_ms": 1.64,
+   "presion_vapor_kpa": 2.89,
+   "presion_kpa": 100.91
+  },
+  {
+   "hora_utc": "2026-11-15T18:30Z",
+   "lluvia_mm_h": 0.166,
+   "evaporacion_mm_h": 0.695,
+   "radiacion_w_m2": 857.0,
+   "temp_c": 30.85,
+   "viento_2m_ms": 1.59,
+   "presion_vapor_kpa": 2.867,
+   "presion_kpa": 100.82
+  },
+  {
+   "hora_utc": "2026-11-15T19:30Z",
+   "lluvia_mm_h": 0.574,
+   "evaporacion_mm_h": 0.678,
+   "radiacion_w_m2": 709.0,
+   "temp_c": 30.81,
+   "viento_2m_ms": 1.53,
+   "presion_vapor_kpa": 2.884,
+   "presion_kpa": 100.74
+  },
+  {
+   "hora_utc": "2026-11-15T20:30Z",
+   "lluvia_mm_h": 1.775,
+   "evaporacion_mm_h": 0.554,
+   "radiacion_w_m2": 468.0,
+   "temp_c": 30.16,
+   "viento_2m_ms": 1.37,
+   "presion_vapor_kpa": 2.969,
+   "presion_kpa": 100.68
+  },
+  {
+   "hora_utc": "2026-11-15T21:30Z",
+   "lluvia_mm_h": 1.068,
+   "evaporacion_mm_h": 0.343,
+   "radiacion_w_m2": 197.0,
+   "temp_c": 28.77,
+   "viento_2m_ms": 1.1,
+   "presion_vapor_kpa": 3.137,
+   "presion_kpa": 100.64
+  },
+  {
+   "hora_utc": "2026-11-15T22:30Z",
+   "lluvia_mm_h": 0.57,
+   "evaporacion_mm_h": 0.178,
+   "radiacion_w_m2": 60.2,
+   "temp_c": 27.41,
+   "viento_2m_ms": 0.99,
+   "presion_vapor_kpa": 3.255,
+   "presion_kpa": 100.7
+  },
+  {
+   "hora_utc": "2026-11-15T23:30Z",
+   "lluvia_mm_h": 0.276,
+   "evaporacion_mm_h": 0.078,
+   "radiacion_w_m2": 0.4,
+   "temp_c": 26.41,
+   "viento_2m_ms": 0.79,
+   "presion_vapor_kpa": 3.248,
+   "presion_kpa": 100.78
+  },
+  {
+   "hora_utc": "2026-11-16T00:30Z",
+   "lluvia_mm_h": 0.394,
+   "evaporacion_mm_h": 0.048,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 26.03,
+   "viento_2m_ms": 0.75,
+   "presion_vapor_kpa": 3.251,
+   "presion_kpa": 100.85
+  },
+  {
+   "hora_utc": "2026-11-16T01:30Z",
+   "lluvia_mm_h": 0.314,
+   "evaporacion_mm_h": 0.022,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.84,
+   "viento_2m_ms": 0.72,
+   "presion_vapor_kpa": 3.267,
+   "presion_kpa": 100.91
+  },
+  {
+   "hora_utc": "2026-11-16T02:30Z",
+   "lluvia_mm_h": 0.27,
+   "evaporacion_mm_h": 0.025,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.77,
+   "viento_2m_ms": 0.62,
+   "presion_vapor_kpa": 3.269,
+   "presion_kpa": 100.97
+  },
+  {
+   "hora_utc": "2026-11-16T03:30Z",
+   "lluvia_mm_h": 0.264,
+   "evaporacion_mm_h": 0.02,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.76,
+   "viento_2m_ms": 0.33,
+   "presion_vapor_kpa": 3.261,
+   "presion_kpa": 101.01
+  },
+  {
+   "hora_utc": "2026-11-16T04:30Z",
+   "lluvia_mm_h": 0.445,
+   "evaporacion_mm_h": 0.023,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.73,
+   "viento_2m_ms": 0.32,
+   "presion_vapor_kpa": 3.251,
+   "presion_kpa": 101.0
+  },
+  {
+   "hora_utc": "2026-11-16T05:30Z",
+   "lluvia_mm_h": 1.205,
+   "evaporacion_mm_h": 0.025,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.66,
+   "viento_2m_ms": 0.34,
+   "presion_vapor_kpa": 3.236,
+   "presion_kpa": 100.97
+  },
+  {
+   "hora_utc": "2026-11-16T06:30Z",
+   "lluvia_mm_h": 1.26,
+   "evaporacion_mm_h": 0.027,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.48,
+   "viento_2m_ms": 0.41,
+   "presion_vapor_kpa": 3.205,
+   "presion_kpa": 100.93
+  },
+  {
+   "hora_utc": "2026-11-16T07:30Z",
+   "lluvia_mm_h": 0.496,
+   "evaporacion_mm_h": 0.025,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.28,
+   "viento_2m_ms": 0.39,
+   "presion_vapor_kpa": 3.169,
+   "presion_kpa": 100.87
+  },
+  {
+   "hora_utc": "2026-11-16T08:30Z",
+   "lluvia_mm_h": 0.485,
+   "evaporacion_mm_h": 0.028,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.14,
+   "viento_2m_ms": 0.4,
+   "presion_vapor_kpa": 3.14,
+   "presion_kpa": 100.88
+  },
+  {
+   "hora_utc": "2026-11-16T09:30Z",
+   "lluvia_mm_h": 0.391,
+   "evaporacion_mm_h": 0.03,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.0,
+   "viento_2m_ms": 0.42,
+   "presion_vapor_kpa": 3.112,
+   "presion_kpa": 100.91
+  },
+  {
+   "hora_utc": "2026-11-16T10:30Z",
+   "lluvia_mm_h": 0.252,
+   "evaporacion_mm_h": 0.027,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 24.9,
+   "viento_2m_ms": 0.35,
+   "presion_vapor_kpa": 3.098,
+   "presion_kpa": 100.94
+  },
+  {
+   "hora_utc": "2026-11-16T11:30Z",
+   "lluvia_mm_h": 0.174,
+   "evaporacion_mm_h": 0.042,
+   "radiacion_w_m2": 26.7,
+   "temp_c": 24.88,
+   "viento_2m_ms": 0.22,
+   "presion_vapor_kpa": 3.084,
+   "presion_kpa": 100.96
+  },
+  {
+   "hora_utc": "2026-11-16T12:30Z",
+   "lluvia_mm_h": 0.002,
+   "evaporacion_mm_h": 0.123,
+   "radiacion_w_m2": 126.9,
+   "temp_c": 25.07,
+   "viento_2m_ms": 0.26,
+   "presion_vapor_kpa": 3.014,
+   "presion_kpa": 101.01
+  },
+  {
+   "hora_utc": "2026-11-16T13:30Z",
+   "lluvia_mm_h": 0.0,
+   "evaporacion_mm_h": 0.262,
+   "radiacion_w_m2": 485.0,
+   "temp_c": 26.75,
+   "viento_2m_ms": 0.26,
+   "presion_vapor_kpa": 2.903,
+   "presion_kpa": 101.04
+  },
+  {
+   "hora_utc": "2026-11-16T14:30Z",
+   "lluvia_mm_h": 0.0,
+   "evaporacion_mm_h": 0.443,
+   "radiacion_w_m2": 717.0,
+   "temp_c": 28.82,
+   "viento_2m_ms": 0.56,
+   "presion_vapor_kpa": 2.844,
+   "presion_kpa": 101.03
+  },
+  {
+   "hora_utc": "2026-11-16T15:30Z",
+   "lluvia_mm_h": 0.105,
+   "evaporacion_mm_h": 0.604,
+   "radiacion_w_m2": 885.0,
+   "temp_c": 30.29,
+   "viento_2m_ms": 0.8,
+   "presion_vapor_kpa": 2.823,
+   "presion_kpa": 100.96
+  },
+  {
+   "hora_utc": "2026-11-16T16:30Z",
+   "lluvia_mm_h": 0.039,
+   "evaporacion_mm_h": 0.668,
+   "radiacion_w_m2": 885.0,
+   "temp_c": 31.16,
+   "viento_2m_ms": 1.05,
+   "presion_vapor_kpa": 2.828,
+   "presion_kpa": 100.82
+  },
+  {
+   "hora_utc": "2026-11-16T17:30Z",
+   "lluvia_mm_h": 0.002,
+   "evaporacion_mm_h": 0.705,
+   "radiacion_w_m2": 973.0,
+   "temp_c": 31.85,
+   "viento_2m_ms": 1.15,
+   "presion_vapor_kpa": 2.853,
+   "presion_kpa": 100.68
+  },
+  {
+   "hora_utc": "2026-11-16T18:30Z",
+   "lluvia_mm_h": 0.0,
+   "evaporacion_mm_h": 0.719,
+   "radiacion_w_m2": 907.0,
+   "temp_c": 32.36,
+   "viento_2m_ms": 1.09,
+   "presion_vapor_kpa": 2.85,
+   "presion_kpa": 100.55
+  },
+  {
+   "hora_utc": "2026-11-16T19:30Z",
+   "lluvia_mm_h": 0.0,
+   "evaporacion_mm_h": 0.698,
+   "radiacion_w_m2": 769.0,
+   "temp_c": 32.57,
+   "viento_2m_ms": 0.93,
+   "presion_vapor_kpa": 2.832,
+   "presion_kpa": 100.43
+  },
+  {
+   "hora_utc": "2026-11-16T20:30Z",
+   "lluvia_mm_h": 0.065,
+   "evaporacion_mm_h": 0.611,
+   "radiacion_w_m2": 550.0,
+   "temp_c": 32.3,
+   "viento_2m_ms": 0.59,
+   "presion_vapor_kpa": 2.84,
+   "presion_kpa": 100.38
+  },
+  {
+   "hora_utc": "2026-11-16T21:30Z",
+   "lluvia_mm_h": 1.142,
+   "evaporacion_mm_h": 0.453,
+   "radiacion_w_m2": 258.5,
+   "temp_c": 31.16,
+   "viento_2m_ms": 0.87,
+   "presion_vapor_kpa": 3.173,
+   "presion_kpa": 100.4
+  },
+  {
+   "hora_utc": "2026-11-16T22:30Z",
+   "lluvia_mm_h": 0.901,
+   "evaporacion_mm_h": 0.252,
+   "radiacion_w_m2": 81.0,
+   "temp_c": 28.77,
+   "viento_2m_ms": 1.1,
+   "presion_vapor_kpa": 3.362,
+   "presion_kpa": 100.46
+  },
+  {
+   "hora_utc": "2026-11-16T23:30Z",
+   "lluvia_mm_h": 0.452,
+   "evaporacion_mm_h": 0.081,
+   "radiacion_w_m2": 0.5,
+   "temp_c": 27.55,
+   "viento_2m_ms": 0.66,
+   "presion_vapor_kpa": 3.432,
+   "presion_kpa": 100.54
+  },
+  {
+   "hora_utc": "2026-11-17T00:30Z",
+   "lluvia_mm_h": 0.97,
+   "evaporacion_mm_h": 0.079,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 27.14,
+   "viento_2m_ms": 0.76,
+   "presion_vapor_kpa": 3.373,
+   "presion_kpa": 100.64
+  },
+  {
+   "hora_utc": "2026-11-17T01:30Z",
+   "lluvia_mm_h": 0.579,
+   "evaporacion_mm_h": 0.045,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 26.62,
+   "viento_2m_ms": 0.47,
+   "presion_vapor_kpa": 3.293,
+   "presion_kpa": 100.67
+  },
+  {
+   "hora_utc": "2026-11-17T02:30Z",
+   "lluvia_mm_h": 0.679,
+   "evaporacion_mm_h": 0.033,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 26.12,
+   "viento_2m_ms": 0.33,
+   "presion_vapor_kpa": 3.237,
+   "presion_kpa": 100.73
+  },
+  {
+   "hora_utc": "2026-11-17T03:30Z",
+   "lluvia_mm_h": 0.264,
+   "evaporacion_mm_h": 0.006,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.81,
+   "viento_2m_ms": 0.12,
+   "presion_vapor_kpa": 3.199,
+   "presion_kpa": 100.76
+  },
+  {
+   "hora_utc": "2026-11-17T04:30Z",
+   "lluvia_mm_h": 0.374,
+   "evaporacion_mm_h": 0.168,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.8,
+   "viento_2m_ms": 0.08,
+   "presion_vapor_kpa": 3.191,
+   "presion_kpa": 100.78
+  },
+  {
+   "hora_utc": "2026-11-17T05:30Z",
+   "lluvia_mm_h": 0.616,
+   "evaporacion_mm_h": 0.002,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.28,
+   "viento_2m_ms": 0.14,
+   "presion_vapor_kpa": 3.015,
+   "presion_kpa": 100.73
+  },
+  {
+   "hora_utc": "2026-11-17T06:30Z",
+   "lluvia_mm_h": 0.531,
+   "evaporacion_mm_h": 0.004,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.21,
+   "viento_2m_ms": 0.26,
+   "presion_vapor_kpa": 3.072,
+   "presion_kpa": 100.7
+  },
+  {
+   "hora_utc": "2026-11-17T07:30Z",
+   "lluvia_mm_h": 0.503,
+   "evaporacion_mm_h": 0.002,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 25.08,
+   "viento_2m_ms": 0.23,
+   "presion_vapor_kpa": 3.065,
+   "presion_kpa": 100.63
+  },
+  {
+   "hora_utc": "2026-11-17T08:30Z",
+   "lluvia_mm_h": 0.494,
+   "evaporacion_mm_h": 0.002,
+   "radiacion_w_m2": 0.0,
+   "temp_c": 24.91,
+   "viento_2m_ms": 0.22,
+   "presion_vapor_kpa": 3.074,
+   "presion_kpa": 100.62
+  }
+ ]
+}
